@@ -210,18 +210,16 @@ public class EncounterGUI {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(nextTurnButton);
-        panel.add(damage);
-        panel.add(heal);
-        panel.add(addCombatant);
-        panel.add(removeCombatant);
-        panel.add(addCondition);
-        panel.add(removeCondition);
-        panel.add(moveInit);
-        panel.add(editRound);
-        panel.add(saveButton);
-        panel.add(loadButton);
-        panel.add(newEnc);
+        JButton[] buttons = { 
+            nextTurnButton, damage, heal, addCombatant, removeCombatant, addCondition, 
+            removeCondition, moveInit, editRound, saveButton, loadButton, newEnc
+        };
+
+        for (JButton button : buttons){
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(button);
+            panel.add(Box.createVerticalStrut(8));
+        }
         frame.add(panel, BorderLayout.EAST);
     }
 
@@ -338,6 +336,9 @@ public class EncounterGUI {
             Integer init = DialogUtils.promptForInt(frame, "Enter Initiative:");
             if(init == null){return;}
 
+            Integer armorClass = DialogUtils.promptForInt(frame, "Enter Armor Class:");
+            if(armorClass == null){return;}
+
             Integer curHP = DialogUtils.promptForInt(frame, "Enter Current HP:");
             if(curHP == null){return;}
 
@@ -350,12 +351,12 @@ public class EncounterGUI {
             String type = (String) comboBox.getSelectedItem();
 
 
-            Combatant newCombatant = new Combatant(name, init, curHP, maxHP, type);
+            Combatant newCombatant = new Combatant(name, init, curHP, maxHP, armorClass, type);
             encounter.addCombatant(newCombatant);
             encounter.sortInitiative();
             refreshDisplay();
         }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(frame, "Please enter valid numbrs");
+            JOptionPane.showMessageDialog(frame, "Please enter valid numbers");
         }
     }
 

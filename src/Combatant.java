@@ -11,6 +11,7 @@ public class Combatant implements Serializable{
     private int init; //Initiative score
     private int curHP;
     private int maxHP;
+    private int armorClass;
     private String type; //PC, NPC, Monster
     private ArrayList<Condition> conditions;
 
@@ -23,6 +24,7 @@ public class Combatant implements Serializable{
 		init = 0;
 		curHP = 0;
 		maxHP = 0;
+		armorClass = 0;
 		type = "";
 		conditions = new ArrayList<>();
     }
@@ -33,13 +35,16 @@ public class Combatant implements Serializable{
      * @param init combatant's initiative score
      * @param curHP combatant's current hit points
      * @param maxHP combatant's max hit points
+     * @param armorClass combatant's armor class
      * @param type combatant's type i.e. Player Character (PC), Non-Player Character (NPC), or Monster
+     * 
      */
-    public Combatant(String name, int init, int curHP, int maxHP, String type){
+    public Combatant(String name, int init, int curHP, int maxHP, int armorClass, String type){
         this.name = name;
         this.init = init;
         this.curHP = Math.max(0, Math.max(curHP, this.maxHP));
         this.maxHP = Math.max(1, maxHP);
+        this.armorClass = armorClass;
         this.type = type;
         this.conditions = new ArrayList<>();;
     }
@@ -75,6 +80,16 @@ public class Combatant implements Serializable{
      * @return max HP
      */
     public int getMaxHP(){return maxHP;}
+
+    /**
+     * Returns combatant's armor class
+     * @return armor class
+     */
+    public int getArmorClass(){return armorClass;}
+
+    public void setArmorClass(int armorClass){
+        this.armorClass = armorClass;
+    }
 
     /**
      * Returns combatant's type
@@ -188,7 +203,7 @@ public class Combatant implements Serializable{
      * Test main for debugging combatants
      */
     void main() {
-        Combatant helena = new Combatant("Helena", 15, 40, 50, "PC");
+        Combatant helena = new Combatant("Helena", 15, 20,40, 20, "PC");
         IO.println(helena);
     }
 }

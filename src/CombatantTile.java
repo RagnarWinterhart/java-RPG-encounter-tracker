@@ -29,13 +29,20 @@ public class CombatantTile extends JPanel {
         setAlignmentX(Component.LEFT_ALIGNMENT);
         setOpaque(true);
 
-        if(combatant == currentCombatant){
-            setBackground(
-                new Color(255,245,170) //Highlights current turn combatant tile
-            );
+        if (combatant == currentCombatant) {
+            setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(
+                    new Color(212, 175, 55), // gold
+                    3
+                ),
+                BorderFactory.createEmptyBorder(10,10,10,10)
+            ));
+
+            setBackground(new Color(55, 55, 70)); // very subtle tint
         }
         add(new JLabel("Name: " + combatant.getName()));
         add(new JLabel("HP: " + combatant.getCurHP() + "/" + combatant.getMaxHP()));
+        add(new JLabel("AC: " + combatant.getArmorClass()));
         add(new JLabel("Initiative: " + combatant.getInit()));
         add(new JLabel("Type: " + combatant.getType()));
         JPanel conditionPanel = new JPanel();
