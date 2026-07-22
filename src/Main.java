@@ -1,3 +1,7 @@
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import com.formdev.flatlaf.FlatDarkLaf;
+
 /**
  * Launches Encounter Builder app 
  */
@@ -5,8 +9,12 @@ public class Main {
     /**
      * Entry point for Encounter program
      */
-        void main() {
-        new EncounterGUI();
+    void main() {
+        FlatDarkLaf.setup();
+
+        SwingUtilities.invokeLater(() -> {
+            new EncounterGUI();
+        });
     }
 }  
         
