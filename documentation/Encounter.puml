@@ -1,0 +1,128 @@
+@startuml
+
+class Main {
++void main()
+}
+
+class Encounter {
+-encounterName : String
+-combatants : ArrayList<Combatant>
+-currentRound : int
+-currentTurn : int
+
+
++Encounter(name : String)
++addCombatant(c : Combatant) : void
++removeCombatant(name : String) : void
++findCombatant(name : String) : Combatant
++sortInitiative() : void
++nextTurn() : void
++saveEncounter(path : String) : void
++loadEncounter(path : String) : Encounter
++getCombatants() : ArrayList<Combatant>
++getCurrentCombatant() : Combatant
++getCurrentRound() : int
++getEncounterName() : String
+}
+
+class Combatant {
+-name : String
+-init : int
+-curHP : int
+-maxHP : int
+-type : String
+-conditions : ArrayList<Condition>
+
+
++Combatant(name, init, curHP, maxHP, type)
++takeDamage(amount : int) : void
++heal(amount : int) : void
++tickConditions() : void
++addConditions(c : Condition) : void
++removeConditions(name : String) : void
++getConditions() : ArrayList<Condition>
+
++getName() : String
++getInit() : int
++setInit(init : int) : void
++getCurHP() : int
++getMaxHP() : int
++getType() : String
+}
+
+class Condition {
+-effectName : String
+-duration : int
+
+
++Condition(name : String, duration : int)
++decDuration() : void
++isExpired() : boolean
++getEffectName() : String
++getDuration() : int
+}
+
+class EncounterGUI {
+-frame : JFrame
+-encounter : Encounter
+-combatantPanel : JPanel
+
++EncounterGUI()
++EncounterGUI(encounter : Encounter)
+
+-setupFrame() : void
+-setupHeader() : void
+-setupCombatantPanel() : void
+-setupButtons() : void
+
++refreshDisplay() : void
+
+-newCombatant() : void
+-remCombatant() : void
+-dealDamage() : void
+-healDamage() : void
+-newEffect() : void
+-remEffect() : void
+-moveInit() : void
+-advanceTurn() : void
+-selectTarget() : String
+}
+
+class CombatantTile {
++CombatantTile(c : Combatant, current : Combatant)
+}
+
+class DialogUtils {
++promptForInt(parent, message) : Integer
++promptForString(parent, message) : String
++dropdown(parent, title, choices) : String
+}
+
+class EncounterTest {
+-encounter : Encounter
+
++testAddCombatant() : void
++testRemoveCombatant() : void
++testSortInitiative() : void
++testHealDamage() : void
++testConditions() : void
++testNextTurnWrapsRound() : void
+}
+
+Main --> EncounterGUI
+
+EncounterGUI --> Encounter
+EncounterGUI --> Combatant
+EncounterGUI --> CombatantTile
+EncounterGUI --> DialogUtils
+
+Encounter "1" *-- "*" Combatant
+Combatant "1" *-- "*" Condition
+
+CombatantTile --> Combatant
+
+EncounterTest --> Encounter
+EncounterTest --> Combatant
+EncounterTest --> Condition
+
+@enduml
