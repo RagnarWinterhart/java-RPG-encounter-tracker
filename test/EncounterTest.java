@@ -25,6 +25,7 @@ public class EncounterTest {
                 20,
                 10,
                 10,
+                10,
                 "PC"
             );
         encounter.addCombatant(a);
@@ -40,12 +41,14 @@ public class EncounterTest {
                 20,
                 10,
                 10,
+                10,
                 "PC"
             );
 
         Combatant b =
             new Combatant(
                 "B",
+                10,
                 10,
                 10,
                 10,
@@ -74,12 +77,14 @@ public class EncounterTest {
                 1,
                 10,
                 10,
+                10,
                 "PC"
             );
 
         Combatant b =
             new Combatant(
                 "B",
+                10,
                 10,
                 10,
                 10,
@@ -91,6 +96,7 @@ public class EncounterTest {
                 20,
                 10,
                 10,
+                10,
                 "PC"
             );
 
@@ -98,6 +104,7 @@ public class EncounterTest {
             new Combatant(
                 "D",
                 5,
+                10,
                 10,
                 10,
                 "Monster"
@@ -127,6 +134,7 @@ public class EncounterTest {
                 "Goblin",
                 12,
                 8,
+                12,
                 10,
                 "Monster"
             );
@@ -169,6 +177,7 @@ public class EncounterTest {
                 20,
                 10,
                 10,
+                10,
                 "PC"
             );
         a.takeDamage(10);
@@ -183,6 +192,7 @@ public class EncounterTest {
             new Combatant(
                 "A",
                 20,
+                10,
                 10,
                 10,
                 "PC"
@@ -215,12 +225,14 @@ public class EncounterTest {
                 20,
                 10,
                 10,
+                10,
                 "PC"
             );
 
         Combatant b =
             new Combatant(
                 "B",
+                10,
                 10,
                 10,
                 10,
