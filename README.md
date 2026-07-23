@@ -26,6 +26,7 @@ Encounters can be saved to and loaded from `.enc` files using the GUI buttons.
 - Lambda expressions
 - File serialization
 - JUnit testing
+- FlatLaf Java Swing Look and feel
 
 ## How to Run/Install (MacOS)
 You must first have a JDK installed with JPackage.
