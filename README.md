@@ -32,7 +32,7 @@ Encounters can be saved to and loaded from `.enc` files using the GUI buttons.
 You must first have a JDK installed with JPackage.
 
 ```bash
-javac -d out src/*.java  
+javac -cp "lib/*" -d out src/*.java 
 ```
 ```bash
 jar cfe EncounterBuilder.jar Main out/*.class
@@ -60,7 +60,7 @@ Finally you should be able to double click and run the installed app whether its
 You must first have a JDK installed with JPackage.
 
 ```bash
-javac -d out src/*.java
+javac -cp "lib/*" -d out src/*.java 
 ```
 ```bash
 jar cfe EncounterBuilder.jar Main out/*.class
