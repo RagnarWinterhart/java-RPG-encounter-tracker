@@ -30,5 +30,7 @@ hs_err_pid*
 # JavaDocs
 /docs
 
-# Out folder
+# Out folders
 /out
+/dist
+

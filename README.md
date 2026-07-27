@@ -32,29 +32,23 @@ Encounters can be saved to and loaded from `.enc` files using the GUI buttons.
 You must first have a JDK installed with JPackage.
 
 ```bash
-javac -cp "lib/*" -d out src/*.java 
+javac -cp "lib/flatlaf-3.7.2.jar" -d out src/*.java 
 ```
 ```bash
-jar cfe EncounterBuilder.jar Main out/*.class
+jar --create \
+    --file EncounterBuilder.jar \
+    --main-class Main \
+    -C out .
 ```
 ```bash
 jpackage \
   --input . \
+  --dest dist \
   --name EncounterBuilder \
   --main-jar EncounterBuilder.jar \
   --main-class Main \
   --type dmg
 ```
-Optionally, you can create an app image, instead of a .dmg for install.
-```bash
-jpackage \
-  --input . \
-  --name EncounterBuilder \
-  --main-jar EncounterBuilder.jar \
-  --main-class Main \
-  --type app-image
-```
-Finally you should be able to double click and run the installed app whether its an app image or an installed application from a .dmg.
 
 ## How to Run/Install (Windows)
 You must first have a JDK installed with JPackage.
@@ -63,33 +57,20 @@ You must first have a JDK installed with JPackage.
 javac -cp "lib/*" -d out src/*.java 
 ```
 ```bash
-jar cfe EncounterBuilder.jar Main out/*.class
+jar --create ^
+    --file EncounterBuilder.jar ^
+    --main-class Main ^
+    -C out .
 ```
 ```bash
-jpackage --input . --name EncounterBuilder --main-jar EncounterBuilder.jar --main-class Main --type msi
+jpackage ^
+    --input dist ^
+    --dest dist ^
+    --name EncounterBuilder ^
+    --main-jar EncounterBuilder.jar ^
+    --main-class Main ^
+    --type exe
 ```
-Or build a portable application folder.
-```bash
-jpackage --input . --name EncounterBuilder --main-jar EncounterBuilder.jar --main-class Main --type app-image
-```
-Note: Additional packages may be required to properly build a .msi, depending on specific Java and Windows setup.
-
-
-## How to Run (Terminal)
-It is not recommende to download to run this project from the terminal, instead follow the above instructions to 
-### Compile 
-
-```bash
-javac -d out src/*.java
-```
-
-### Run
-
-```bash
-java -cp out Main
-```
-
-
 
 ## Testing
 
