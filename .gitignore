@@ -21,11 +21,13 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-#Encounter files 
+#Encounter files
 *.enc
 
 #secrets
 /secrets
+/target/
+/encounter_tracker.db
 
 # JavaDocs
 /docs
@@ -33,4 +35,8 @@ hs_err_pid*
 # Out folders
 /out
 /dist
+
+# IntelliJ
+/.idea/
+*.iml
 
