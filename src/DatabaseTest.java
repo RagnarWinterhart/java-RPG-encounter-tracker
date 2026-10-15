@@ -1,42 +1,28 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseTest {
 
     public static void main(String[] args) {
-        String url = "jdbc:sqlite:encounter_tracker.db";
-
-        try (Connection connection = DriverManager.getConnection(url)) {
-            System.out.println("Connected to SQLite successfully.");
-        } catch (SQLException e) {
+        DatabaseManager.initializeDatabase();
+        try(Connection connection = DatabaseManager.connect();
+            Statement statement = connection.createStatement();){
+                int rowsAffected = statement.executeUpdate("INSERT INTO combatant(name, max_hp, " +
+                    "armor_class, category_id) VALUES ('Goblin', 7, 15, 1);");
+//                int delete = statement.executeUpdate("DELETE FROM combatant;");
+                try(ResultSet results = statement.executeQuery(
+                        "SELECT name, id FROM combatant;")){
+                    while (results.next()) {
+                        IO.print(results.getInt("id"));
+                        IO.print(" ");
+                        IO.println(results.getString("name"));
+                    }
+                }
+        }catch(SQLException e){
             e.printStackTrace();
         }
+
     }
 }
-
-/*
-CREATE TABLE category(
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE combatant(
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    max_hp INTEGER NOT NULL,
-    armor_class INTEGER NOT NULL,
-    category_id INTEGER NOT NULL REFERENCES category(id)
-);
-
-CREATE TABLE creature_type(
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE combatant_creature_type(
-    combatant_id INTEGER NOT NULL REFERENCES combatant(id),
-    type_id INTEGER NOT NULL REFERENCES creature_type(id),
-    PRIMARY KEY (combatant_id, type_id)
-);
- */

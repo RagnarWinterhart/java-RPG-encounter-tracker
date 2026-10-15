@@ -1,11 +1,11 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE category(
+CREATE TABLE IF NOT EXISTS category(
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE combatant(
+CREATE TABLE IF NOT EXISTS combatant(
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     max_hp INTEGER NOT NULL,
@@ -13,12 +13,12 @@ CREATE TABLE combatant(
     category_id INTEGER NOT NULL REFERENCES category(id)
 );
 
-CREATE TABLE creature_type(
+CREATE TABLE IF NOT EXISTS creature_type(
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE combatant_creature_type(
+CREATE TABLE IF NOT EXISTS combatant_creature_type(
     combatant_id INTEGER NOT NULL REFERENCES combatant(id),
     type_id INTEGER NOT NULL REFERENCES creature_type(id),
     PRIMARY KEY (combatant_id, type_id)
