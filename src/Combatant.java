@@ -2,8 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Represents a combatant with name, hitpoints (current/max), 
- * type, and active conditions. 
+ * Represents a combatant with name, hitpoints (current/max),
+ * type, and active conditions.
  */
 public class Combatant implements Serializable{
     private static final long serialVersionUID = 1L; //Explicit serial version ID so small changes don't mess wit saves
@@ -15,9 +15,9 @@ public class Combatant implements Serializable{
     private String type; //PC, NPC, Monster
     private ArrayList<Condition> conditions;
 
-    /** 
-     * Default constructor. 
-     * Creates an empty combatant with default values. 
+    /**
+     * Default constructor.
+     * Creates an empty combatant with default values.
      */
     public Combatant() {
 		name = "";
@@ -28,25 +28,25 @@ public class Combatant implements Serializable{
 		type = "";
 		conditions = new ArrayList<>();
     }
-    
+
     /**
      * Creates a combatant with specified values.
      * @param name the combatant's name
      * @param init combatant's initiative score
-     * @param curHP combatant's current hit points
      * @param maxHP combatant's max hit points
+     * @param curHP combatant's current hit points
      * @param armorClass combatant's armor class
      * @param type combatant's type i.e. Player Character (PC), Non-Player Character (NPC), or Monster
-     * 
+     *
      */
-    public Combatant(String name, int init, int curHP, int maxHP, int armorClass, String type){
+    public Combatant(String name, int init, int maxHP, int curHP, int armorClass, String type){
         this.name = name;
         this.init = init;
-        this.curHP = Math.max(0, Math.max(curHP, this.maxHP));
         this.maxHP = Math.max(1, maxHP);
+        this.curHP = Math.clamp(curHP, 0, this.maxHP);
         this.armorClass = armorClass;
         this.type = type;
-        this.conditions = new ArrayList<>();;
+        this.conditions = new ArrayList<>();
     }
 
     /**
@@ -106,7 +106,7 @@ public class Combatant implements Serializable{
     }
 
     /**
-     * Prints combatant details to console 
+     * Prints combatant details to console
      * Used in development
      */
     public void printDetails(){
@@ -117,7 +117,7 @@ public class Combatant implements Serializable{
     }
 
     /**
-     * Applies damage to combatant 
+     * Applies damage to combatant
      * HP cannot go below 0
      * @param damage amount to apply
      */
@@ -127,11 +127,11 @@ public class Combatant implements Serializable{
         if(curHP <= 0) {
             curHP = 0;
         }
-        
+
     }
 
     /**
-     * Applies healing to combatant 
+     * Applies healing to combatant
      * HP cannot go above combatant's max
      * @param heal amount to apply
      */
@@ -166,7 +166,7 @@ public class Combatant implements Serializable{
 
     /**
      * Decrements duration of all conditions on combatant
-     * Removes expired conditions automatically 
+     * Removes expired conditions automatically
      */
     public void tickconditions(){
         for(int i = conditions.size() - 1; i >= 0; i--){
@@ -175,13 +175,13 @@ public class Combatant implements Serializable{
             if(condition.isExpired()){
                 conditions.remove(i);
             }
-            
+
         }
     }
 
     /**
-     * Returns a formatted string represenation of combatant 
-     * @return formatted combatant info 
+     * Returns a formatted string represenation of combatant
+     * @return formatted combatant info
      */
     @Override
     public String toString(){

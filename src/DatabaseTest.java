@@ -22,7 +22,6 @@ public class DatabaseTest {
                 }
         }catch(SQLException e){
             e.printStackTrace();
-        }
-
+        };
     }
 }

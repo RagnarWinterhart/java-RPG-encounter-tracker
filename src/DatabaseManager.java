@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:encounter_tracker.db";
@@ -43,4 +40,31 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+
+    public static void insertCombatant(Combatant combatant){
+//        int rowsAffected = statement.executeUpdate("INSERT INTO combatant(name, max_hp, " +
+//                "armor_class, category_id) VALUES ('Goblin', 7, 15, 1);");
+
+        
+    }
+
+    public static int getCategoryId(String categoryName){
+        int targetCategory = -1;
+        String sql = "SELECT id FROM category WHERE name = ?;";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement selectStmt = conn.prepareStatement(sql)){
+            selectStmt.setString(1, categoryName);
+            try(ResultSet results = selectStmt.executeQuery()){
+
+               if (results.next()) {
+                    targetCategory = results.getInt("id");
+                }
+
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return targetCategory;
+    }
+
 }

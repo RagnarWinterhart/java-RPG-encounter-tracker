@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 /**
  * Graphical user interface for the Encounter Builder application
- * 
- * Displays combatants, encounter state, turn order, and user interactions like 
- * damage, healing, conditions, changing initiative, adding/removing combatants, saving, 
+ * Displays combatants, encounter state, turn order, and user interactions like
+ * damage, healing, conditions, changing initiative, adding/removing combatants, saving,
  * and loading encounters.
- * 
  * Uses Java Swing componenets to create interface.
- * 
+ *
  * @author Rowan Lynn
  * @version 1.0
  */
@@ -55,15 +53,15 @@ public class EncounterGUI {
         setupHeader();
         setupCombatantPanel();
         setupButtons();
- 
+
         refreshDisplay();
         frame.setVisible(true);
     }
 
     /**
-     * Prompts user to create encounter. If user enters a blank name default name is used. 
+     * Prompts user to create encounter. If user enters a blank name default name is used.
      * If the dialog is cancelled the application exits.
-     * @return New encounter object with entered name 
+     * @return New encounter object with entered name
      */
     private static Encounter createEncounter(){
         String name = JOptionPane.showInputDialog(null, "Enter Encounter Name: ");
@@ -149,7 +147,7 @@ public class EncounterGUI {
     }
 
     /**
-     *  Sets up the buttons for managing the encounter (Next Turn, Deal Damage, Heal, 
+     *  Sets up the buttons for managing the encounter (Next Turn, Deal Damage, Heal,
      *  Add Combatant, Remove Combatant, Add condition, Remove condition, Save file, Load from file, Move initiative, and Edit round) and adds them to a panel on the right side of the frame.
      *  Each button is associated with an action listener that triggers the corresponding method to perform its function when clicked.
      */
@@ -158,7 +156,7 @@ public class EncounterGUI {
         nextTurnButton.addActionListener(e -> {advanceTurn();});
 
         damage = new JButton("Deal Damage");
-        damage.addActionListener(e ->{dealDamage();}); 
+        damage.addActionListener(e ->{dealDamage();});
 
         heal = new JButton("Heal");
         heal.addActionListener(e -> {healDamage();});
@@ -210,8 +208,8 @@ public class EncounterGUI {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JButton[] buttons = { 
-            nextTurnButton, damage, heal, addCombatant, removeCombatant, addCondition, 
+        JButton[] buttons = {
+            nextTurnButton, damage, heal, addCombatant, removeCombatant, addCondition,
             removeCondition, moveInit, editRound, saveButton, loadButton, newEnc
         };
 
@@ -224,11 +222,11 @@ public class EncounterGUI {
     }
 
     /*
-    Button Methods lie below... 
+    Button Methods lie below...
     Each method corresponds to a button and performs the necessary actions to update the encounter state and refresh the display accordingly.
     */
 
-    /** 
+    /**
      * Allows for round number to be edited without disturbing other elements. Returns, cancelling the operation if null is inputed for any field.
     */
     private void editRound(){
@@ -268,7 +266,7 @@ public class EncounterGUI {
     /**
      *  Adds a new condition to the selected combatant. Returns, cancelling the operation if null is inputed for any field.
      */
-    private void newcondition(){ 
+    private void newcondition(){
         String selected = selectTarget();
         Combatant target = encounter.findCombatant(selected);
         if(target == null){
@@ -284,12 +282,12 @@ public class EncounterGUI {
         }
         Condition condition = new Condition(name, duration);
         target.addConditions(condition);
-        refreshDisplay(); 
+        refreshDisplay();
     }
 
     /**
-     *  Removes a condition from the selected combatant. Prompts the user to select a combatant, 
-     * then displays a list of that combatant's current conditions for the user to choose from. If the user selects an condition, 
+     *  Removes a condition from the selected combatant. Prompts the user to select a combatant,
+     * then displays a list of that combatant's current conditions for the user to choose from. If the user selects an condition,
      * it is removed from the combatant and the display is refreshed.
      */
     private void remCondition(){
@@ -318,12 +316,12 @@ public class EncounterGUI {
         }
         String chosen = (String) comboBox.getSelectedItem();
         target.removeConditions(chosen);
-        refreshDisplay(); 
+        refreshDisplay();
     }
-    
+
     /**
-     * Prompts the user to enter details for a new combatant (name, initiative, current HP, max HP, and type), 
-     * creates a new Combatant object with those details, adds it to the encounter, sorts the combatants by initiative, 
+     * Prompts the user to enter details for a new combatant (name, initiative, current HP, max HP, and type),
+     * creates a new Combatant object with those details, adds it to the encounter, sorts the combatants by initiative,
      * and refreshes the display. If the user enters invalid input for initiative or HP values, an error message is shown.
      */
     private void newCombatant(){
@@ -339,8 +337,9 @@ public class EncounterGUI {
             Integer armorClass = DialogUtils.promptForInt(frame, "Enter Armor Class:");
             if(armorClass == null){return;}
 
-            Integer curHP = DialogUtils.promptForInt(frame, "Enter Current HP:");
-            if(curHP == null){return;}
+            //Commented out for cleanup, when a new combatant is created, curHP defaults to max
+//            Integer curHP = DialogUtils.promptForInt(frame, "Enter Current HP:");
+//            if(curHP == null){return;}
 
             Integer maxHP = DialogUtils.promptForInt(frame, "Enter Max HP:");
             if(maxHP == null){return;}
@@ -351,7 +350,7 @@ public class EncounterGUI {
             String type = (String) comboBox.getSelectedItem();
 
 
-            Combatant newCombatant = new Combatant(name, init, curHP, maxHP, armorClass, type);
+            Combatant newCombatant = new Combatant(name, init, maxHP, maxHP, armorClass, type);
             encounter.addCombatant(newCombatant);
             encounter.sortInitiative();
             refreshDisplay();
@@ -365,13 +364,13 @@ public class EncounterGUI {
      * If combatant is removed display is refreshed. If action is cancelled or not combatant selected, method returns without any chnages.
      */
     private void remCombatant(){
-        String selected = selectTarget();    
+        String selected = selectTarget();
         if(selected != null){
-            encounter.removeCombatant(selected);      
+            encounter.removeCombatant(selected);
         }
         refreshDisplay();
     }
-    
+
     /**
      * Prompt user for a target combatant selected from a dropdown, then prompts for damage amount.
      * If input is valid, damage is applied to the target and display is refreshed. If user cancels or inputs invalid damage,
@@ -384,7 +383,7 @@ public class EncounterGUI {
         Integer damage = DialogUtils.promptForInt(frame, "Enter damage amount:");
         if(damage == null){return;}
         target.takeDamage(damage);
-        refreshDisplay(); 
+        refreshDisplay();
     }
 
     /**
@@ -393,7 +392,7 @@ public class EncounterGUI {
      * method returns without any changes.
      */
     private void healDamage(){
-        String selected = selectTarget();   
+        String selected = selectTarget();
         if(selected == null){return;} //Safety check
         Combatant target = encounter.findCombatant(selected);
         Integer healing =  DialogUtils.promptForInt(frame, "Enter heal amount:");
@@ -403,7 +402,7 @@ public class EncounterGUI {
     }
 
     /**
-     * Advances the encounter to the next turn by calling the nextTurn method 
+     * Advances the encounter to the next turn by calling the nextTurn method
      * on the encounter object and refreshing the display to reflect any changes in combatant or turn order.
      */
     private void advanceTurn(){
@@ -413,7 +412,7 @@ public class EncounterGUI {
 
     /**
      * Prompts the user to select a combatant from a dropdown list of current combatants in the encounter.
-     * If the user selects a combatant and confirms, the name of the selected combatant is returned. 
+     * If the user selects a combatant and confirms, the name of the selected combatant is returned.
      * If the user cancels the selection or if there are no combatants, the method returns null.
      * @return the name of the selected combatant, or null if no selection is made or if there are no combatants
      */
