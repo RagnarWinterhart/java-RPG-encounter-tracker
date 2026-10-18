@@ -44,8 +44,18 @@ public class DatabaseManager {
     public static void insertCombatant(Combatant combatant){
 //        int rowsAffected = statement.executeUpdate("INSERT INTO combatant(name, max_hp, " +
 //                "armor_class, category_id) VALUES ('Goblin', 7, 15, 1);");
-
-        
+        String sql = "INSERT INTO combatant(name, max_hp, armor_class, category_id) " +
+                "VALUES (?, ?, ?, ?);";
+        try(Connection conn = DatabaseManager.connect();
+        PreparedStatement insertStmt = conn.prepareStatement(sql)){
+            insertStmt.setString(1, combatant.getName());
+            insertStmt.setInt(2, combatant.getMaxHP());
+            insertStmt.setInt(3, combatant.getArmorClass());
+            insertStmt.setInt(4, getCategoryId(combatant.getType()));
+            insertStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static int getCategoryId(String categoryName){
