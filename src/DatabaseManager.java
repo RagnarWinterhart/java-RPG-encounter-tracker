@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:encounter_tracker.db";
@@ -42,8 +44,6 @@ public class DatabaseManager {
     }
 
     public static void insertCombatant(Combatant combatant){
-//        int rowsAffected = statement.executeUpdate("INSERT INTO combatant(name, max_hp, " +
-//                "armor_class, category_id) VALUES ('Goblin', 7, 15, 1);");
         String sql = "INSERT INTO combatant(name, max_hp, armor_class, category_id) " +
                 "VALUES (?, ?, ?, ?);";
         try(Connection conn = DatabaseManager.connect();
@@ -53,6 +53,52 @@ public class DatabaseManager {
             insertStmt.setInt(3, combatant.getArmorClass());
             insertStmt.setInt(4, getCategoryId(combatant.getType()));
             insertStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    // Should sanitize and trim the param before it gets here (and make case insensitive)
+    // searchBy should be a dropdown list of each column for the combatant, and joined columns
+    public static List<Combatant> searchCombatant(String searchParam, String searchBy){
+        StringBuilder sql = new StringBuilder("SELECT combatant.*, category.name AS category_name FROM combatant " +
+                "INNER JOIN category ON combatant.category_id = category.id");
+        searchParam = "%" + searchParam + "%";
+        try(Connection conn = DatabaseManager.connect();){
+            switch(searchBy){
+                case "Name": sql.append(" WHERE combatant.name LIKE ?");
+                            break;
+                //I need to refactor old "Type" that meant NPC, PC, Monster into category, since we have creature type now.
+                case "Category":
+                    sql.append(" WHERE category.name LIKE ?");
+                    break;
+                case "Creature Type":
+                    sql.append(" INNER " +
+                            "JOIN combatant_creature_type ON " +
+                            "combatant.id = combatant_creature_type.combatant_id " +
+                            "INNER JOIN creature_type ON combatant_creature_type.creature_type_id " +
+                            "= creature_type.id WHERE creature_type.name LIKE ?;");
+                    break;
+                default:
+                    sql.append(" WHERE 1=1");
+                    break;
+            }
+            PreparedStatement selectStmt = conn.prepareStatement(String.valueOf(sql));
+            selectStmt.setString(1, searchParam);
+            ResultSet results = selectStmt.executeQuery();
+
+            List<Combatant> search = new ArrayList<>();
+            while(results.next()){
+                int id = results.getInt("id");
+                String name = results.getString("name");
+                int maxHP = results.getInt("max_hp");
+                int armorClass = results.getInt("armor_class");
+                String creatureCategory = results.getString("category_name");
+
+                Combatant newCom = new Combatant(name, 0, maxHP, maxHP, armorClass,creatureCategory);
+                newCom.setDatabaseId(id);
+                search.add(newCom);
+            }
+            return search;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

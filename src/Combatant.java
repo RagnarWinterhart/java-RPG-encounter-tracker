@@ -12,8 +12,17 @@ public class Combatant implements Serializable{
     private int curHP;
     private int maxHP;
     private int armorClass;
+    private Integer databaseId;
     private String type; //PC, NPC, Monster
     private ArrayList<Condition> conditions;
+
+    public Integer getDatabaseId() {
+        return databaseId;
+    }
+
+    public void setDatabaseId(Integer databaseId) {
+        this.databaseId = databaseId;
+    }
 
     /**
      * Default constructor.
