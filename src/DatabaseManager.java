@@ -94,7 +94,7 @@ public class DatabaseManager {
                 int armorClass = results.getInt("armor_class");
                 String creatureCategory = results.getString("category_name");
 
-                Combatant newCom = new Combatant(name, 0, maxHP, maxHP, armorClass,creatureCategory);
+                Combatant newCom = new Combatant(name, 0, maxHP, maxHP, armorClass, creatureCategory);
                 newCom.setDatabaseId(id);
                 search.add(newCom);
             }
@@ -122,5 +122,33 @@ public class DatabaseManager {
         }
         return targetCategory;
     }
+
+    public static boolean updateCombatant(Combatant combatant){
+        if(combatant.getDatabaseId() == null){
+            return false;
+        }
+        int rowsAffected = -1;
+        String sql = "UPDATE combatant SET name = ?, max_hp = ?, " +
+                "armor_class = ?, category_id = ? WHERE id = ?";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement updateStmt = conn.prepareStatement(sql)){
+            updateStmt.setString(1, combatant.getName());
+            updateStmt.setInt(2, combatant.getMaxHP());
+            updateStmt.setInt(3, combatant.getArmorClass());
+            int categoryId = getCategoryId(combatant.getType());
+            if(categoryId == -1){
+                return false;
+            }else{
+                updateStmt.setInt(4, categoryId);
+            }
+            updateStmt.setInt(5, combatant.getDatabaseId());
+            rowsAffected = updateStmt.executeUpdate();
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return rowsAffected == 1;
+    }
+    
 
 }

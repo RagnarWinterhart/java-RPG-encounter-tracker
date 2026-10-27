@@ -359,6 +359,32 @@ public class EncounterGUI {
         }
     }
 
+//NEW METHOD FOR ADDING NEW COMBATANT, SHOULD KEEP ALL INPUTS IN SAME PANEL, AND IMPLEMENT INSERTCOMBATANT
+//    private void newCombatant(){
+//        try{
+//            JFrame frame = new JFrame("New Combatant");
+//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            frame.setSize(400, 250);
+//            frame.setLocationRelativeTo(null);
+//            JPanel inputPanel = new JPanel(new GridLayout(4, 3, 10, 10));
+//            inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+//
+//            JLabel nameLabel = new JLabel("Combatant Name:");
+//            JTextField nameField = new JTextField();
+//
+//            JLabel initLabel = new JLabel("Initiative:");
+//            JTextField initField = new ();
+//
+//            JLabel ageLabel = new JLabel("Age:");
+//            JTextField ageField = new JTextField();
+//
+//            JButton submitButton = new JButton("Submit Data");
+//            JLabel statusLabel = new JLabel("", SwingConstants.CENTER);
+//        }catch(NumberFormatException ex){
+//            JOptionPane.showMessageDialog(frame, "Please enter valid numbers");
+//        }
+//    }
+
     /**
      * Removes a combatant from the encounter based on user selection. Prompts the user to select a combatant from a list of current combatants.
      * If combatant is removed display is refreshed. If action is cancelled or not combatant selected, method returns without any chnages.

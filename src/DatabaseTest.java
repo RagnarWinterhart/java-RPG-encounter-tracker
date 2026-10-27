@@ -13,6 +13,11 @@ public class DatabaseTest {
         }else{
             IO.println(results.get(0).getName());
             IO.println(results.get(0).getDatabaseId());
+            Combatant foundGoblin = results.get(0);
+
+            foundGoblin.setArmorClass(20);
+
+            IO.println(DatabaseManager.updateCombatant(foundGoblin));
         }
 
 
