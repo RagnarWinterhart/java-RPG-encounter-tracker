@@ -18,6 +18,7 @@ public class EncounterGUI {
     private Encounter encounter;
 
     private JButton nextTurnButton;
+    private JButton prevTurnButton;
     private JButton damage;
     private JButton heal;
     private JButton addCombatant;
@@ -155,6 +156,9 @@ public class EncounterGUI {
         nextTurnButton = new JButton("Next Turn");
         nextTurnButton.addActionListener(e -> {advanceTurn();});
 
+        prevTurnButton = new JButton("Previous Turn");
+        prevTurnButton.addActionListener(e -> {previousTurn();});
+
         damage = new JButton("Deal Damage");
         damage.addActionListener(e ->{dealDamage();});
 
@@ -209,7 +213,7 @@ public class EncounterGUI {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JButton[] buttons = {
-            nextTurnButton, damage, heal, addCombatant, removeCombatant, addCondition,
+            nextTurnButton, prevTurnButton, damage, heal, addCombatant, removeCombatant, addCondition,
             removeCondition, moveInit, editRound, saveButton, loadButton, newEnc
         };
 
@@ -433,6 +437,11 @@ public class EncounterGUI {
      */
     private void advanceTurn(){
         encounter.nextTurn();
+        refreshDisplay();
+    }
+
+    private void previousTurn(){
+        encounter.previousTurn();
         refreshDisplay();
     }
 

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 /**
- * Represents combat encounter, containing combatants, initiative order, 
+ * Represents combat encounter, containing combatants, initiative order,
  * rounds, and current turn tracking.
  */
 public class Encounter implements Serializable{
@@ -35,7 +35,7 @@ public class Encounter implements Serializable{
         this.combatants = new ArrayList<>();
         this.currentRound = 1;
         this.currentCombatant = null;
-        
+
     }
 
     /**
@@ -78,7 +78,7 @@ public class Encounter implements Serializable{
      *
      * @return the zero-based index of the current turn, or 0 if not found
      */
-    public int getCurrentTurn(){ //For redundancy 
+    public int getCurrentTurn(){ //For redundancy
         int index = combatants.indexOf(currentCombatant);
         if(index < 0){
             return 0;
@@ -139,7 +139,7 @@ public class Encounter implements Serializable{
     }
 
     /**
-     * Iterate to find combatant by name, ignoring case 
+     * Iterate to find combatant by name, ignoring case
      * @param name of combatant to be found
      * @return combatant or null if not found
      */
@@ -160,16 +160,16 @@ public class Encounter implements Serializable{
     }
 
     /**
-     * Retrieves current combatant, ticks their conditions (end of turn), then 
-     * advances the turn to next combatant. 
+     * Retrieves current combatant, ticks their conditions (end of turn), then
+     * advances the turn to next combatant.
      * Wraps to new round if we advance past last combatant.
      */
     public void nextTurn(){
         if(combatants.isEmpty()){
             currentCombatant = null;
             return;
-        }
-        currentCombatant.tickconditions();
+        }else currentCombatant.tickconditions();
+
         int index = combatants.indexOf(currentCombatant);
 
         if(index == -1){
@@ -181,6 +181,30 @@ public class Encounter implements Serializable{
         if(index >= combatants.size()){
             index = 0;
             currentRound++;
+        }
+        currentCombatant = combatants.get(index); //Update actual current combatant tracker
+    }
+
+    public void previousTurn(){
+        if(combatants.isEmpty()){
+            currentCombatant = null;
+            return;
+        }
+        int index = combatants.indexOf(currentCombatant);
+
+        if(index == -1){
+            currentCombatant = combatants.get(0);
+            return;
+        }
+        index--;
+
+        if(index < 0 ){
+            index = combatants.size() - 1;
+            if(currentRound != 1){
+                currentRound--;
+            }else{
+                index = 0;
+            }
         }
         currentCombatant = combatants.get(index); //Update actual current combatant tracker
     }
@@ -230,7 +254,7 @@ public class Encounter implements Serializable{
      */
     public static Encounter loadEncounter(String filename){
         try{
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename)); // Load the encounter object from the file 
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename)); // Load the encounter object from the file
             Encounter loaded = (Encounter) in.readObject(); // Read the encounter object from the file and cast it to an Encounter type
             in.close();
             return loaded;
