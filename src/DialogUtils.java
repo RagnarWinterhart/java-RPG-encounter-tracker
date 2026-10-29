@@ -15,7 +15,7 @@ public class DialogUtils {
     */
     public static Integer promptForInt(JFrame frame, String message){
         try{
-            String input =JOptionPane.showInputDialog(frame, message);
+            String input = JOptionPane.showInputDialog(frame, message);
 
             if(input == null){
                 return null;
@@ -29,11 +29,11 @@ public class DialogUtils {
     }
 
     /**
-     * Prompts the user to enter a string value using a dialog box. If the user enters a non-empty string, 
+     * Prompts the user to enter a string value using a dialog box. If the user enters a non-empty string,
      * it is returned. If the user cancels the input or enters an empty string, null is returned.
      * @param frame the parent frame for the dialog box to appear in
      * @param message message to be passed into the dialog
-     * @return the string entered or null if cancelled or empty string is enteted 
+     * @return the string entered or null if cancelled or empty string is enteted
      */
     public static String promptForString(JFrame frame, String message){
         String input = JOptionPane.showInputDialog(frame, message);
@@ -49,7 +49,7 @@ public class DialogUtils {
      * @param frame the parent fram for the dialog box to appear in
      * @param title Title of the dialog box
      * @param choices The passed in options to select in the dropdown
-     * @return The selected option, or null if nothing is selected or dialog is cancelled 
+     * @return The selected option, or null if nothing is selected or dialog is cancelled
      */
     public static String dropdown(JFrame frame, String title, String[] choices){
         JComboBox<String> comboBox = new JComboBox<>(choices);

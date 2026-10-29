@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Displays combatants, encounter state, turn order, and user interactions like
  * damage, healing, conditions, changing initiative, adding/removing combatants, saving,
  * and loading encounters.
- * Uses Java Swing componenets to create interface.
+ * Uses Java Swing components to create interface.
  *
  * @author Rowan Lynn
  * @version 1.0
@@ -61,7 +61,7 @@ public class EncounterGUI {
 
     /**
      * Prompts user to create encounter. If user enters a blank name default name is used.
-     * If the dialog is cancelled the application exits.
+     * If the dialog is canceled the application exits.
      * @return New encounter object with entered name
      */
     private static Encounter createEncounter(){
@@ -149,42 +149,42 @@ public class EncounterGUI {
 
     /**
      *  Sets up the buttons for managing the encounter (Next Turn, Deal Damage, Heal,
-     *  Add Combatant, Remove Combatant, Add condition, Remove condition, Save file, Load from file, Move initiative, and Edit round) and adds them to a panel on the right side of the frame.
+     *  Add Combatant, Remove Combatant, Add condition, Remove condition, Save file, Load from file, Move initiative, and Edit round). Adding them to a panel on the right side of the frame.
      *  Each button is associated with an action listener that triggers the corresponding method to perform its function when clicked.
      */
     private void setupButtons(){
         nextTurnButton = new JButton("Next Turn");
-        nextTurnButton.addActionListener(e -> {advanceTurn();});
+        nextTurnButton.addActionListener(e -> advanceTurn());
 
         prevTurnButton = new JButton("Previous Turn");
-        prevTurnButton.addActionListener(e -> {previousTurn();});
+        prevTurnButton.addActionListener(e -> previousTurn());
 
         damage = new JButton("Deal Damage");
-        damage.addActionListener(e ->{dealDamage();});
+        damage.addActionListener(e -> dealDamage());
 
         heal = new JButton("Heal");
-        heal.addActionListener(e -> {healDamage();});
+        heal.addActionListener(e -> healDamage());
 
         addCombatant = new JButton("Add Combatant");
-        addCombatant.addActionListener(e -> {newCombatant();});
+        addCombatant.addActionListener(e -> newCombatant());
 
         removeCombatant = new JButton("Remove Combatant");
-        removeCombatant.addActionListener(e ->{remCombatant();});
+        removeCombatant.addActionListener(e -> remCombatant());
 
         addCondition = new JButton("Add Condition");
-        addCondition.addActionListener(e ->{newcondition();});
+        addCondition.addActionListener(e -> newCondition());
 
         removeCondition = new JButton("Remove Condition");
-        removeCondition.addActionListener(e ->{remCondition();});
+        removeCondition.addActionListener(e -> remCondition());
 
         moveInit = new JButton("Move Initiative");
-        moveInit.addActionListener(e ->{moveInit();});
+        moveInit.addActionListener(e -> moveInit());
 
         newEnc = new JButton("New Encounter");
-        newEnc.addActionListener(e ->{newEnc();});
+        newEnc.addActionListener(e -> newEnc());
 
         editRound = new JButton("Edit Round");
-        editRound.addActionListener(e ->{editRound();});
+        editRound.addActionListener(e -> editRound());
 
         saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
@@ -231,7 +231,7 @@ public class EncounterGUI {
     */
 
     /**
-     * Allows for round number to be edited without disturbing other elements. Returns, cancelling the operation if null is inputed for any field.
+     * Allows for round number to be edited without disturbing other elements. Returns, cancelling the operation if null is inputted for any field.
     */
     private void editRound(){
         Integer round = DialogUtils.promptForInt(frame, "Enter new round number:");
@@ -248,13 +248,11 @@ public class EncounterGUI {
         if(result == JOptionPane.YES_OPTION){
             encounter = createEncounter();
             refreshDisplay();
-        }else{
-            return;
         }
     }
 
     /**
-     * Changes selected target's initiative, moving them accordingly. Returns, cancelling the operation if null is inputed for any field.
+     * Changes selected target's initiative, moving them accordingly. Returns, cancelling the operation if null is inputted for any field.
      */
     private void moveInit(){
         String selected = selectTarget();
@@ -268,9 +266,9 @@ public class EncounterGUI {
     }
 
     /**
-     *  Adds a new condition to the selected combatant. Returns, cancelling the operation if null is inputed for any field.
+     *  Adds a new condition to the selected combatant. Returns, cancelling the operation if null is inputted for any field.
      */
-    private void newcondition(){
+    private void newCondition(){
         String selected = selectTarget();
         Combatant target = encounter.findCombatant(selected);
         if(target == null){
@@ -291,7 +289,7 @@ public class EncounterGUI {
 
     /**
      *  Removes a condition from the selected combatant. Prompts the user to select a combatant,
-     * then displays a list of that combatant's current conditions for the user to choose from. If the user selects an condition,
+     * then displays a list of that combatant's current conditions for the user to choose from. If the user selects a condition,
      * it is removed from the combatant and the display is refreshed.
      */
     private void remCondition(){
@@ -324,74 +322,78 @@ public class EncounterGUI {
     }
 
     /**
-     * Prompts the user to enter details for a new combatant (name, initiative, current HP, max HP, and category),
-     * creates a new Combatant object with those details, adds it to the encounter, sorts the combatants by initiative,
-     * and refreshes the display. If the user enters invalid input for initiative or HP values, an error message is shown.
+     * Displays a form for creating a new combatant with a name, initiative,
+     * maximum HP, armor class, and category.
+     * Validates the entered values, creates a Combatant with current HP set
+     * to maximum HP, adds it to the encounter, sorts initiative, and refreshes
+     * the display. Cancelling the form returns without making changes.
      */
     private void newCombatant(){
-        try {
-            String name = DialogUtils.promptForString(frame, "Enter Combatant Name:");
-            if(name == null || name.isBlank()){
+        try{
+            JFrame dialogFrame = new JFrame("New Combatant");
+            dialogFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dialogFrame.setSize(400, 250);
+            dialogFrame.setLocationRelativeTo(null);
+            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+            inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+
+            JLabel nameLabel = new JLabel("Combatant Name:");
+            JTextField nameField = new JTextField();
+
+            JLabel initLabel = new JLabel("Initiative:");
+            JTextField initField = new JTextField();
+
+            JLabel maxHPLabel = new JLabel("Max HP:");
+            JTextField maxHPField = new JTextField();
+
+            JLabel acLabel = new JLabel("Armor Class:");
+            JTextField acField = new JTextField();
+
+            JLabel categoryLabel = new JLabel("Category:");
+            String[] choices = {"Player", "NPC", "Monster"};
+            JComboBox<String> categoryBox = new JComboBox<>(choices);
+            inputPanel.add(nameLabel);
+            inputPanel.add(nameField);
+            inputPanel.add(initLabel);
+            inputPanel.add(initField);
+            inputPanel.add(maxHPLabel);
+            inputPanel.add(maxHPField);
+            inputPanel.add(acLabel);
+            inputPanel.add(acField);
+            inputPanel.add(categoryLabel);
+            inputPanel.add(categoryBox);
+
+            int result = JOptionPane.showConfirmDialog(
+                    dialogFrame,
+                    inputPanel,
+                    "New Combatant",
+                    JOptionPane.OK_CANCEL_OPTION
+            );
+            if (result != JOptionPane.OK_OPTION) {
                 return;
             }
-
-            Integer init = DialogUtils.promptForInt(frame, "Enter Initiative:");
-            if(init == null){return;}
-
-            Integer armorClass = DialogUtils.promptForInt(frame, "Enter Armor Class:");
-            if(armorClass == null){return;}
-
-            //Commented out for cleanup, when a new combatant is created, curHP defaults to max
-//            Integer curHP = DialogUtils.promptForInt(frame, "Enter Current HP:");
-//            if(curHP == null){return;}
-
-            Integer maxHP = DialogUtils.promptForInt(frame, "Enter Max HP:");
-            if(maxHP == null){return;}
-
-            String[] choices = {"PC", "NPC", "Monster"};
-            JComboBox<String> comboBox = new JComboBox<>(choices);
-            JOptionPane.showMessageDialog(frame, comboBox, "Select Combatant Category", JOptionPane.QUESTION_MESSAGE);
-            String category = (String) comboBox.getSelectedItem();
-
-
+            String name = nameField.getText().trim();
+            int init = Integer.parseInt(initField.getText().trim());
+            int maxHP = Integer.parseInt(maxHPField.getText().trim());
+            int armorClass = Integer.parseInt(acField.getText().trim());
+            String category = (String) categoryBox.getSelectedItem();
+            if(name.isBlank() || maxHP < 1 || armorClass < 1){
+                JOptionPane.showMessageDialog(dialogFrame, "Please enter a name, Max HP of at least 1, and Armor Class of at least 1.");
+                return;
+            }
             Combatant newCombatant = new Combatant(name, init, maxHP, maxHP, armorClass, category);
             encounter.addCombatant(newCombatant);
             encounter.sortInitiative();
             refreshDisplay();
         }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(frame, "Please enter valid numbers");
+            JOptionPane.showMessageDialog(frame, "Please enter Max HP of at least 1, and Armor Class of at least 1.");
         }
     }
 
-//NEW METHOD FOR ADDING NEW COMBATANT, SHOULD KEEP ALL INPUTS IN SAME PANEL, AND IMPLEMENT INSERTCOMBATANT
-//    private void newCombatant(){
-//        try{
-//            JFrame frame = new JFrame("New Combatant");
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            frame.setSize(400, 250);
-//            frame.setLocationRelativeTo(null);
-//            JPanel inputPanel = new JPanel(new GridLayout(4, 3, 10, 10));
-//            inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-//
-//            JLabel nameLabel = new JLabel("Combatant Name:");
-//            JTextField nameField = new JTextField();
-//
-//            JLabel initLabel = new JLabel("Initiative:");
-//            JTextField initField = new ();
-//
-//            JLabel ageLabel = new JLabel("Age:");
-//            JTextField ageField = new JTextField();
-//
-//            JButton submitButton = new JButton("Submit Data");
-//            JLabel statusLabel = new JLabel("", SwingConstants.CENTER);
-//        }catch(NumberFormatException ex){
-//            JOptionPane.showMessageDialog(frame, "Please enter valid numbers");
-//        }
-//    }
-
     /**
      * Removes a combatant from the encounter based on user selection. Prompts the user to select a combatant from a list of current combatants.
-     * If combatant is removed display is refreshed. If action is cancelled or not combatant selected, method returns without any chnages.
+     * If combatant is removed display is refreshed. If action is canceled or not combatant selected, method returns without any changes.
      */
     private void remCombatant(){
         String selected = selectTarget();
