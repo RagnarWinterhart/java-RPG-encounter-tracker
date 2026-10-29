@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * GUI class for creating combatant tiles, used in EncounterGUI. 
+ * GUI class for creating combatant tiles, used in EncounterGUI.
  */
 public class CombatantTile extends JPanel {
         /**
@@ -44,7 +44,7 @@ public class CombatantTile extends JPanel {
         add(new JLabel("HP: " + combatant.getCurHP() + "/" + combatant.getMaxHP()));
         add(new JLabel("AC: " + combatant.getArmorClass()));
         add(new JLabel("Initiative: " + combatant.getInit()));
-        add(new JLabel("Type: " + combatant.getType()));
+        add(new JLabel("Category: " + combatant.getCategory()));
         JPanel conditionPanel = new JPanel();
         conditionPanel.setOpaque(false);
         conditionPanel.setLayout(new BoxLayout(conditionPanel, BoxLayout.Y_AXIS));

@@ -1,9 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import java.util.*;
-import java.beans.Transient;
-import java.lang.*;
+
 /**
  * JUnit Tests for Encounter Builder... Tests core funcionality, manual UI tests are required for GUI portion of the application.
  */
@@ -12,7 +10,7 @@ public class EncounterTest {
     /**
 	 * Reset the base data structures just in case
 	 */
-	@BeforeEach 
+	@BeforeEach
 	void reset(){
         encounter = new Encounter("Test");
 	}
@@ -160,7 +158,7 @@ public class EncounterTest {
         assertEquals("Goblin", loadedGoblin.getName());
         assertEquals(8, loadedGoblin.getCurHP());
         assertEquals(10, loadedGoblin.getMaxHP());
-        assertEquals("Monster", loadedGoblin.getType());
+        assertEquals("Monster", loadedGoblin.getCategory());
         assertEquals(1, loadedGoblin.getConditions().size());
         assertEquals("Poisoned",
                 loadedGoblin

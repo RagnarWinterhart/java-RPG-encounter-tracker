@@ -324,7 +324,7 @@ public class EncounterGUI {
     }
 
     /**
-     * Prompts the user to enter details for a new combatant (name, initiative, current HP, max HP, and type),
+     * Prompts the user to enter details for a new combatant (name, initiative, current HP, max HP, and category),
      * creates a new Combatant object with those details, adds it to the encounter, sorts the combatants by initiative,
      * and refreshes the display. If the user enters invalid input for initiative or HP values, an error message is shown.
      */
@@ -350,11 +350,11 @@ public class EncounterGUI {
 
             String[] choices = {"PC", "NPC", "Monster"};
             JComboBox<String> comboBox = new JComboBox<>(choices);
-            JOptionPane.showMessageDialog(frame, comboBox, "Select Combatant Type", JOptionPane.QUESTION_MESSAGE);
-            String type = (String) comboBox.getSelectedItem();
+            JOptionPane.showMessageDialog(frame, comboBox, "Select Combatant Category", JOptionPane.QUESTION_MESSAGE);
+            String category = (String) comboBox.getSelectedItem();
 
 
-            Combatant newCombatant = new Combatant(name, init, maxHP, maxHP, armorClass, type);
+            Combatant newCombatant = new Combatant(name, init, maxHP, maxHP, armorClass, category);
             encounter.addCombatant(newCombatant);
             encounter.sortInitiative();
             refreshDisplay();

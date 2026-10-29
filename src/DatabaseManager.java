@@ -51,7 +51,7 @@ public class DatabaseManager {
             insertStmt.setString(1, combatant.getName());
             insertStmt.setInt(2, combatant.getMaxHP());
             insertStmt.setInt(3, combatant.getArmorClass());
-            insertStmt.setInt(4, getCategoryId(combatant.getType()));
+            insertStmt.setInt(4, getCategoryId(combatant.getCategory()));
             insertStmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -135,7 +135,7 @@ public class DatabaseManager {
             updateStmt.setString(1, combatant.getName());
             updateStmt.setInt(2, combatant.getMaxHP());
             updateStmt.setInt(3, combatant.getArmorClass());
-            int categoryId = getCategoryId(combatant.getType());
+            int categoryId = getCategoryId(combatant.getCategory());
             if(categoryId == -1){
                 return false;
             }else{
@@ -149,6 +149,25 @@ public class DatabaseManager {
         }
         return rowsAffected == 1;
     }
-    
 
+    /*
+    One thing to revisit once pf2e_stat_block and creature-type
+    relationships are populated is what should happen to related rows when
+    a combatant is deleted. That's where ON DELETE CASCADE may become relevant.
+     */
+    public static boolean deleteCombatant(Combatant combatant){
+        if(combatant.getDatabaseId() == null){
+            return false;
+        }
+        String sql = "DELETE FROM combatant WHERE id = ?";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement deleteStmt = conn.prepareStatement(sql)){
+            deleteStmt.setInt(1, combatant.getDatabaseId());
+            int rowsAffected = deleteStmt.executeUpdate();
+            return rowsAffected == 1;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

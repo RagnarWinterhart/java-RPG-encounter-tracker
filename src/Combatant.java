@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  * Represents a combatant with name, hitpoints (current/max),
- * type, and active conditions.
+ * category, and active conditions.
  */
 public class Combatant implements Serializable{
     private static final long serialVersionUID = 1L; //Explicit serial version ID so small changes don't mess wit saves
@@ -13,7 +13,7 @@ public class Combatant implements Serializable{
     private int maxHP;
     private int armorClass;
     private Integer databaseId;
-    private String type; //PC, NPC, Monster
+    private String category; //PC, NPC, Monster
     private ArrayList<Condition> conditions;
 
     public Integer getDatabaseId() {
@@ -34,7 +34,7 @@ public class Combatant implements Serializable{
 		curHP = 0;
 		maxHP = 0;
 		armorClass = 0;
-		type = "";
+		category = "";
 		conditions = new ArrayList<>();
     }
 
@@ -45,16 +45,16 @@ public class Combatant implements Serializable{
      * @param maxHP combatant's max hit points
      * @param curHP combatant's current hit points
      * @param armorClass combatant's armor class
-     * @param type combatant's type i.e. Player Character (PC), Non-Player Character (NPC), or Monster
+     * @param category combatant's category i.e. Player Character (PC), Non-Player Character (NPC), or Monster
      *
      */
-    public Combatant(String name, int init, int maxHP, int curHP, int armorClass, String type){
+    public Combatant(String name, int init, int maxHP, int curHP, int armorClass, String category){
         this.name = name;
         this.init = init;
         this.maxHP = Math.max(1, maxHP);
         this.curHP = Math.clamp(curHP, 0, this.maxHP);
         this.armorClass = armorClass;
-        this.type = type;
+        this.category = category;
         this.conditions = new ArrayList<>();
     }
 
@@ -101,10 +101,10 @@ public class Combatant implements Serializable{
     }
 
     /**
-     * Returns combatant's type
-     * @return type
+     * Returns combatant's category
+     * @return category
      */
-    public String getType(){return type;}
+    public String getCategory(){return category;}
 
     /**
      * Returns combatant's conditions
@@ -122,7 +122,7 @@ public class Combatant implements Serializable{
         IO.println("Name: " + this.name);
         IO.println("Initiative: " + this.init);
         IO.println("HP: " + this.curHP);
-        IO.println("Type: " + this.type);
+        IO.println("Type: " + this.category);
     }
 
     /**
@@ -199,7 +199,7 @@ public class Combatant implements Serializable{
                 curHP + "/" +
                 maxHP + " | Initiative: " +
                 init + " | Type: " +
-                type;
+                category;
         if(!conditions.isEmpty()){
             result += " | conditions: ";
             for(Condition e : conditions){
