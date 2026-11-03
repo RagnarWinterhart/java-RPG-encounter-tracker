@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:sqlite:encounter_tracker.db";
+    private static final String URL = "JDBC:sqlite:encounter_tracker.db";
 
     public static Connection connect() throws SQLException {
         Connection connection = DriverManager.getConnection(URL);
@@ -44,7 +44,7 @@ public class DatabaseManager {
     }
 
     public static void insertCombatant(Combatant combatant){
-        String sql = "INSERT INTO combatant(name, max_hp, armor_class, category_id) " +
+        String sql = "INSERT INTO combatants(name, max_hp, armor_class, category_id) " +
                 "VALUES (?, ?, ?, ?);";
         try(Connection conn = DatabaseManager.connect();
         PreparedStatement insertStmt = conn.prepareStatement(sql)){
@@ -57,24 +57,23 @@ public class DatabaseManager {
             throw new RuntimeException(e);
         }
     }
-    // Should sanitize and trim the param before it gets here (and make case insensitive)
+    // Should sanitize and trim the param before it gets here (and make case-insensitive)
     // searchBy should be a dropdown list of each column for the combatant, and joined columns
     public static List<Combatant> searchCombatant(String searchParam, String searchBy){
-        StringBuilder sql = new StringBuilder("SELECT combatant.*, category.name AS category_name FROM combatant " +
-                "INNER JOIN category ON combatant.category_id = category.id");
+        StringBuilder sql = new StringBuilder("SELECT combatants.*, categories.name AS category_name FROM combatants " +
+                "INNER JOIN categories ON combatants.category_id = categories.id");
         searchParam = "%" + searchParam + "%";
-        try(Connection conn = DatabaseManager.connect();){
+        try(Connection conn = DatabaseManager.connect()){
             switch(searchBy){
-                case "Name": sql.append(" WHERE combatant.name LIKE ?");
+                case "Name": sql.append(" WHERE combatants.name LIKE ?");
                             break;
-                //I need to refactor old "Type" that meant NPC, PC, Monster into category, since we have creature type now.
                 case "Category":
-                    sql.append(" WHERE category.name LIKE ?");
+                    sql.append(" WHERE categories.name LIKE ?");
                     break;
                 case "Creature Type":
                     sql.append(" INNER " +
                             "JOIN combatant_creature_type ON " +
-                            "combatant.id = combatant_creature_type.combatant_id " +
+                            "combatants.id = combatant_creature_type.combatant_id " +
                             "INNER JOIN creature_type ON combatant_creature_type.creature_type_id " +
                             "= creature_type.id WHERE creature_type.name LIKE ?;");
                     break;
@@ -106,7 +105,7 @@ public class DatabaseManager {
 
     public static int getCategoryId(String categoryName){
         int targetCategory = -1;
-        String sql = "SELECT id FROM category WHERE name = ?;";
+        String sql = "SELECT id FROM categories WHERE name = ?;";
         try(Connection conn = DatabaseManager.connect();
             PreparedStatement selectStmt = conn.prepareStatement(sql)){
             selectStmt.setString(1, categoryName);
@@ -128,7 +127,7 @@ public class DatabaseManager {
             return false;
         }
         int rowsAffected = -1;
-        String sql = "UPDATE combatant SET name = ?, max_hp = ?, " +
+        String sql = "UPDATE combatants SET name = ?, max_hp = ?, " +
                 "armor_class = ?, category_id = ? WHERE id = ?";
         try(Connection conn = DatabaseManager.connect();
             PreparedStatement updateStmt = conn.prepareStatement(sql)){
@@ -159,7 +158,7 @@ public class DatabaseManager {
         if(combatant.getDatabaseId() == null){
             return false;
         }
-        String sql = "DELETE FROM combatant WHERE id = ?";
+        String sql = "DELETE FROM combatants WHERE id = ?";
         try(Connection conn = DatabaseManager.connect();
             PreparedStatement deleteStmt = conn.prepareStatement(sql)){
             deleteStmt.setInt(1, combatant.getDatabaseId());

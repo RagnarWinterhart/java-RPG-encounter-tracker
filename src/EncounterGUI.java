@@ -145,6 +145,7 @@ public class EncounterGUI {
         frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        new CombatantLibraryGUI();
     }
 
     /**

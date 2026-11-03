@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS combatants(
     name TEXT UNIQUE NOT NULL,
     max_hp INTEGER NOT NULL,
     armor_class INTEGER NOT NULL,
-    category_id INTEGER NOT NULL REFERENCES category(id)
+    category_id INTEGER NOT NULL REFERENCES categories(id)
 );
 
 CREATE TABLE IF NOT EXISTS creature_type(
@@ -19,20 +19,30 @@ CREATE TABLE IF NOT EXISTS creature_type(
 );
 
 CREATE TABLE IF NOT EXISTS combatant_creature_type(
-    combatant_id INTEGER NOT NULL REFERENCES combatant(id),
+    combatant_id INTEGER NOT NULL REFERENCES combatants(id),
     type_id INTEGER NOT NULL REFERENCES creature_type(id),
     PRIMARY KEY (combatant_id, type_id)
 );
 
 CREATE TABLE IF NOT EXISTS pf2e_stat_block(
-    id INTEGER PRIMARY KEY,
+    combatant_id INTEGER PRIMARY KEY REFERENCES combatants(id),
     level INTEGER,
     perception INTEGER,
     fortitude INTEGER,
     reflex INTEGER,
     will INTEGER,
-    speed INTEGER,
-    combatant_id INTEGER PRIMARY KEY REFERENCES combatant(id)
+    speed INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS party(
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS combatant_party(
+    party_id INTEGER NOT NULL REFERENCES party(id),
+    combatant_id INTEGER NOT NULL REFERENCES combatants(id),
+    PRIMARY KEY (party_id, combatant_id)
 );
 
 -- Seed Default Categories and Types
