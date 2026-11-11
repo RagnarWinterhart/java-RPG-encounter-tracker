@@ -37,6 +37,7 @@ public class CombatantLibraryGUI {
         }
 
         frame.add(createSearchPanel(), BorderLayout.NORTH);
+        frame.add(createActionPanel(), BorderLayout.SOUTH);
         frame.add(scrollPane);
         frame.setVisible(true);
     }
@@ -69,8 +70,17 @@ public class CombatantLibraryGUI {
 
     }
 
-//    public searchButton(){
-//
-//    }
+    public JPanel createActionPanel(){
+        JPanel actionPanel = new JPanel();
+        JButton deleteButton = new JButton("Delete");
+        JButton addButton = new JButton("Add");
+        JButton editButton = new JButton("Edit");
+
+        actionPanel.add(deleteButton);
+        actionPanel.add(addButton);
+        actionPanel.add(editButton);
+        return actionPanel;
+    }
+
 
 }

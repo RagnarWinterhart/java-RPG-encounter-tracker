@@ -335,7 +335,7 @@ public class EncounterGUI {
             dialogFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             dialogFrame.setSize(400, 250);
             dialogFrame.setLocationRelativeTo(null);
-            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+            JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
             inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 
@@ -354,6 +354,8 @@ public class EncounterGUI {
             JLabel categoryLabel = new JLabel("Category:");
             String[] choices = {"Player", "NPC", "Monster"};
             JComboBox<String> categoryBox = new JComboBox<>(choices);
+            JCheckBox checkBox = new JCheckBox("Add to Combatant Library");
+            checkBox.setSelected(false);
             inputPanel.add(nameLabel);
             inputPanel.add(nameField);
             inputPanel.add(initLabel);
@@ -364,6 +366,7 @@ public class EncounterGUI {
             inputPanel.add(acField);
             inputPanel.add(categoryLabel);
             inputPanel.add(categoryBox);
+            inputPanel.add(checkBox);
 
             int result = JOptionPane.showConfirmDialog(
                     dialogFrame,
@@ -384,6 +387,9 @@ public class EncounterGUI {
                 return;
             }
             Combatant newCombatant = new Combatant(name, init, maxHP, maxHP, armorClass, category);
+            if(checkBox.isSelected()){
+                DatabaseManager.insertCombatant(newCombatant);
+            }
             encounter.addCombatant(newCombatant);
             encounter.sortInitiative();
             refreshDisplay();
