@@ -71,12 +71,43 @@ public class CombatantLibraryGUI {
         JButton editButton = new JButton("Edit");
 
         actionPanel.add(deleteButton);
+        deleteButton.addActionListener(e -> showDeleteCombatantDialog());
         actionPanel.add(addButton);
         addButton.addActionListener(e -> showAddCombatantDialog());
         actionPanel.add(editButton);
         editButton.addActionListener(e -> showEditCombatantDialog());
         return actionPanel;
     }
+
+    public void showDeleteCombatantDialog(){
+        int selectedRow = combatantTable.getSelectedRow();
+        if(selectedRow == -1){
+            JOptionPane.showMessageDialog(frame, "Please select a combatant to delete.");
+            return;
+        }
+        int modelRow = combatantTable.convertRowIndexToModel(selectedRow);
+        Combatant selectedCombatant = currentResults.get(modelRow);
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        int result = JOptionPane.showConfirmDialog(
+                frame,
+                "Are you sure you want to delete " + selectedCombatant.getName() + "?",
+                "Delete Combatant",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+        if (result != JOptionPane.OK_OPTION) {
+            return;
+        }
+        boolean success = DatabaseManager.deleteCombatant(selectedCombatant);
+
+        if (success) {
+            updateTable(DatabaseManager.getAllCombatants());
+            JOptionPane.showMessageDialog(frame, "Combatant deleted successfully.");
+        } else {
+            JOptionPane.showMessageDialog(frame, "Failed to delete combatant.");
+        }
+    }
+
 
     public void showEditCombatantDialog(){
         int selectedRow = combatantTable.getSelectedRow();
@@ -136,9 +167,8 @@ public class CombatantLibraryGUI {
             selectedCombatant.setArmorClass(armorClass);
             selectedCombatant.setCategory(category);
             selectedCombatant.setName(name);
-            DatabaseManager.updateCombatant(selectedCombatant); //NEED SOME TRY/CATCH FOR THIS AS WELL CURRENTLY NO CHECKING FOR IF THIS FAILS
-            updateTable(DatabaseManager.getAllCombatants());
-            boolean success = DatabaseManager.updateCombatant(selectedCombatant);
+
+            boolean success = DatabaseManager.updateCombatant(selectedCombatant);//NEED SOME TRY/CATCH FOR THIS AS WELL CURRENTLY NO CHECKING FOR IF THIS FAILS
 
             if (success) {
                 updateTable(DatabaseManager.getAllCombatants());
