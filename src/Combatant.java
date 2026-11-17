@@ -65,7 +65,15 @@ public class Combatant implements Serializable{
     public String getName(){return name;}
 
     /**
-     * Returns combatant's intitiative score
+     * Sets combatant's name
+     * @param name name to set
+     */
+    public void setName(String name){
+        this.name = name;
+    }
+
+    /**
+     * Returns combatant's initiative score
      * @return initiative score
      */
     public int getInit(){return init;}
@@ -91,6 +99,14 @@ public class Combatant implements Serializable{
     public int getMaxHP(){return maxHP;}
 
     /**
+     * Sets combatant's Max HP
+     * @param maxHP to set
+     */
+    public void setMaxHP(int maxHP){
+        this.maxHP = maxHP;
+    }
+
+    /**
      * Returns combatant's armor class
      * @return armor class
      */
@@ -105,6 +121,14 @@ public class Combatant implements Serializable{
      * @return category
      */
     public String getCategory(){return category;}
+
+    /**
+     * Sets combatant's category
+     * @param category to set
+     */
+    public void setCategory(String category){
+        this.category = category;
+    }
 
     /**
      * Returns combatant's conditions

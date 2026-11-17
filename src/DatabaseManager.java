@@ -169,4 +169,28 @@ public class DatabaseManager {
             return false;
         }
     }
+
+    public static List<Combatant> getAllCombatants(){
+        StringBuilder sql = new StringBuilder("SELECT combatants.*, categories.name AS category_name FROM combatants " +
+                "INNER JOIN categories ON combatants.category_id = categories.id");
+        try(Connection conn = DatabaseManager.connect()){
+            PreparedStatement selectStmt = conn.prepareStatement(String.valueOf(sql));
+            ResultSet results = selectStmt.executeQuery();
+            List<Combatant> search = new ArrayList<>();
+            while(results.next()){
+                int id = results.getInt("id");
+                String name = results.getString("name");
+                int maxHP = results.getInt("max_hp");
+                int armorClass = results.getInt("armor_class");
+                String creatureCategory = results.getString("category_name");
+
+                Combatant newCom = new Combatant(name, 0, maxHP, maxHP, armorClass, creatureCategory);
+                newCom.setDatabaseId(id);
+                search.add(newCom);
+            }
+            return search;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
