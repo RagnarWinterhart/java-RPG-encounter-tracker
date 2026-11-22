@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS pf2e_stat_block(
     speed INTEGER
 );
 
+-- Not yet implemented, will be implemented in the future
 CREATE TABLE IF NOT EXISTS party(
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE

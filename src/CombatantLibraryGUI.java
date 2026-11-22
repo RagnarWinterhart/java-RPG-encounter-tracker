@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.List;
 
 public class CombatantLibraryGUI {
+    private EncounterGUI encounterGUI;
     private JTextField searchField;
     private JComboBox<String> searchByBox;
     private final DefaultTableModel model;
@@ -22,7 +23,8 @@ public class CombatantLibraryGUI {
     //Search Controls --> search bar and drop down for criteria (name/category/creature_type)
     //New/Edit/Delete buttons
     //Add to Encounter button
-    public CombatantLibraryGUI(){
+    public CombatantLibraryGUI(EncounterGUI encounterGUI){
+        this.encounterGUI = encounterGUI;
         frame = new JFrame("Combatant Library");
         frame.setSize(700, 450);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -141,6 +143,7 @@ public class CombatantLibraryGUI {
         JButton deleteButton = new JButton("Delete");
         JButton addButton = new JButton("Add");
         JButton editButton = new JButton("Edit");
+        JButton addToEncounterButton = new JButton("Add to Encounter");
 
         actionPanel.add(deleteButton);
         deleteButton.addActionListener(e -> showDeleteCombatantDialog());
@@ -148,7 +151,19 @@ public class CombatantLibraryGUI {
         addButton.addActionListener(e -> showAddCombatantDialog());
         actionPanel.add(editButton);
         editButton.addActionListener(e -> showEditCombatantDialog());
+        actionPanel.add(addToEncounterButton);
+        addToEncounterButton.addActionListener(e -> addSelectedToEncounter());
         return actionPanel;
+    }
+
+    public void addSelectedToEncounter(){
+        int selectedRow = combatantTable.getSelectedRow();
+
+        if (selectedRow == -1) {
+            return;
+        }
+        int modelRow = combatantTable.convertRowIndexToModel(selectedRow);
+        encounterGUI.addExistingCombatant(currentResults.get(modelRow));
     }
 
     //The functionality of the delete button in the action pane

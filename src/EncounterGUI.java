@@ -27,6 +27,7 @@ public class EncounterGUI {
     private JButton removeCondition;
     private JButton saveButton;
     private JButton loadButton;
+    private JButton libraryButton;
     private JButton moveInit;
     private JButton newEnc;
     private JButton editRound;
@@ -145,7 +146,7 @@ public class EncounterGUI {
         frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        new CombatantLibraryGUI();
+
     }
 
     /**
@@ -210,12 +211,14 @@ public class EncounterGUI {
             }
 
         });
+        libraryButton = new JButton("Open Library");
+        libraryButton.addActionListener(e -> new CombatantLibraryGUI(this));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JButton[] buttons = {
             nextTurnButton, prevTurnButton, damage, heal, addCombatant, removeCombatant, addCondition,
-            removeCondition, moveInit, editRound, saveButton, loadButton, newEnc
+            removeCondition, moveInit, editRound, saveButton, loadButton, newEnc, libraryButton
         };
 
         for (JButton button : buttons){
@@ -471,5 +474,11 @@ public class EncounterGUI {
             choices[i] = combatants.get(i).getName();
         }
         return DialogUtils.dropdown(frame, "Select Target", choices);
+    }
+
+    public void addExistingCombatant(Combatant combatant){
+        encounter.addCombatant(combatant);
+        encounter.sortInitiative();
+        refreshDisplay();
     }
 }
