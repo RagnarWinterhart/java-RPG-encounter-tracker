@@ -204,10 +204,11 @@ public class DatabaseManager {
         }
     }
 
-    public static void insertStats(Combatant combatant, PF2eStatBlock stat){
+    public static boolean insertStats(Combatant combatant, PF2eStatBlock stat){
         String sql = "INSERT INTO pf2e_stat_block(combatant_id, level, " +
                 "perception, fortitude, reflex, will, speed) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);";
+        int rowsAffected = -1;
         try(Connection conn = DatabaseManager.connect();
             PreparedStatement insertStmt = conn.prepareStatement(sql)){
             insertStmt.setInt(1, combatant.getDatabaseId());
@@ -217,9 +218,50 @@ public class DatabaseManager {
             insertStmt.setInt(5, stat.getReflex());
             insertStmt.setInt(6, stat.getWill());
             insertStmt.setInt(7, stat.getSpeed());
-            insertStmt.executeUpdate();
+            rowsAffected = insertStmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        return rowsAffected == 1;
+    }
+
+    public static boolean updateStats(Combatant combatant, PF2eStatBlock stat){
+        if(combatant.getDatabaseId() == null){
+            return false;
+        }
+        int rowsAffected = -1;
+        String sql = "UPDATE pf2e_stat_block SET level = ?, perception = ?, " +
+                "fortitude = ?, reflex = ?, will = ?, speed = ? WHERE combatant_id = ?";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement updateStmt = conn.prepareStatement(sql)){
+            updateStmt.setInt(1, stat.getLevel());
+            updateStmt.setInt(2, stat.getPerception());
+            updateStmt.setInt(3, stat.getFortitude());
+            updateStmt.setInt(4, stat.getReflex());
+            updateStmt.setInt(5, stat.getWill());
+            updateStmt.setInt(6, stat.getSpeed());
+            updateStmt.setInt(7, combatant.getDatabaseId());
+            rowsAffected = updateStmt.executeUpdate();
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return rowsAffected == 1;
+    }
+
+    public static boolean deleteStats(Combatant combatant){
+        if(combatant.getDatabaseId() == null){
+            return false;
+        }
+        String sql = "DELETE FROM pf2e_stat_block WHERE combatant_id = ?";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement deleteStmt = conn.prepareStatement(sql)){
+            deleteStmt.setInt(1, combatant.getDatabaseId());
+            int rowsAffected = deleteStmt.executeUpdate();
+            return rowsAffected >= 0;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
         }
     }
 

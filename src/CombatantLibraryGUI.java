@@ -206,30 +206,45 @@ public class CombatantLibraryGUI {
         }
         int modelRow = combatantTable.convertRowIndexToModel(selectedRow);
         Combatant selectedCombatant = currentResults.get(modelRow);
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        PF2eStatBlock selectedStats = DatabaseManager.getPF2eStats(selectedCombatant.getDatabaseId());
+        JPanel inputPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JPanel statsPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        JPanel basicPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        inputPanel.add(basicPanel);
+        inputPanel.add(statsPanel);
+        JTextField[] statFields = addStats(statsPanel);
+        if(selectedStats != null){
+            statFields[0].setText(String.valueOf(selectedStats.getLevel()));
+            statFields[1].setText(String.valueOf(selectedStats.getPerception()));
+            statFields[2].setText(String.valueOf(selectedStats.getFortitude()));
+            statFields[3].setText(String.valueOf(selectedStats.getReflex()));
+            statFields[4].setText(String.valueOf(selectedStats.getWill()));
+            statFields[5].setText(String.valueOf(selectedStats.getSpeed()));
+        }
+
         inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel nameLabel = new JLabel("Name:");
-        JTextField nameField = new JTextField(selectedCombatant.getName(), 20);
+        JTextField nameField = new JTextField(selectedCombatant.getName());
 
         JLabel maxHPLabel = new JLabel("Max HP:");
-        JTextField maxHPField = new JTextField(String.valueOf(selectedCombatant.getMaxHP()), 10);
+        JTextField maxHPField = new JTextField(String.valueOf(selectedCombatant.getMaxHP()));
 
         JLabel acLabel = new JLabel("Armor Class:");
-        JTextField acField = new JTextField(String.valueOf(selectedCombatant.getArmorClass()), 10);
+        JTextField acField = new JTextField(String.valueOf(selectedCombatant.getArmorClass()));
 
         JLabel categoryLabel = new JLabel("Category:");
         String[] choices = {"Player", "NPC", "Monster"};
         JComboBox<String> categoryBox = new JComboBox<>(choices);
         categoryBox.setSelectedItem(selectedCombatant.getCategory());
-        inputPanel.add(nameLabel);
-        inputPanel.add(nameField);
-        inputPanel.add(maxHPLabel);
-        inputPanel.add(maxHPField);
-        inputPanel.add(acLabel);
-        inputPanel.add(acField);
-        inputPanel.add(categoryLabel);
-        inputPanel.add(categoryBox);
+        basicPanel.add(nameLabel);
+        basicPanel.add(nameField);
+        basicPanel.add(maxHPLabel);
+        basicPanel.add(maxHPField);
+        basicPanel.add(acLabel);
+        basicPanel.add(acField);
+        basicPanel.add(categoryLabel);
+        basicPanel.add(categoryBox);
         int result = JOptionPane.showConfirmDialog(
                 frame,
                 inputPanel,
@@ -248,10 +263,30 @@ public class CombatantLibraryGUI {
             int maxHP = Integer.parseInt(maxHPField.getText().trim());
             int armorClass = Integer.parseInt(acField.getText().trim());
             String category = (String) categoryBox.getSelectedItem();
+
+            boolean allEmpty = true;
+            boolean anyEmpty = false;
+
+            for (JTextField field : statFields) {
+                if (field.getText().trim().isEmpty()) {
+                    anyEmpty = true;
+                } else {
+                    allEmpty = false;
+                }
+            }
+            if (anyEmpty && !allEmpty) {
+                JOptionPane.showMessageDialog(
+                        frame,
+                        "Please fill in all stat fields, or leave them all empty."
+                );
+                return;
+            }
+
             if(maxHP < 1 || armorClass < 1){
                 JOptionPane.showMessageDialog(frame, "Please enter Max HP of at least 1, and Armor Class of at least 1.");
                 return;
             }
+            //Update combatant info
             selectedCombatant.setMaxHP(maxHP);
             selectedCombatant.setArmorClass(armorClass);
             selectedCombatant.setCategory(category);
@@ -259,18 +294,62 @@ public class CombatantLibraryGUI {
 
             boolean success = DatabaseManager.updateCombatant(selectedCombatant);//NEED SOME TRY/CATCH FOR THIS AS WELL CURRENTLY NO CHECKING FOR IF THIS FAILS
 
-            if (success) {
-                updateTable(DatabaseManager.getAllCombatants());
-                JOptionPane.showMessageDialog(frame, "Combatant updated successfully.");
-            } else {
+            if (!success) {
                 JOptionPane.showMessageDialog(frame, "Failed to update combatant.");
             }
+
+            //Handle stat block changes
+            boolean statsSuccess = true;
+
+            if (allEmpty) {
+                if (selectedStats != null) {
+                    statsSuccess = DatabaseManager.deleteStats(selectedCombatant);
+                }
+            } else {
+                PF2eStatBlock newStats = getNewStats(statFields);
+
+                if (selectedStats != null) {
+                    statsSuccess = DatabaseManager.updateStats(selectedCombatant, newStats);
+                } else {
+                    statsSuccess = DatabaseManager.insertStats(selectedCombatant, newStats);
+                }
+            }
+            if(statsSuccess){
+                updateTable(DatabaseManager.getAllCombatants());
+                JOptionPane.showMessageDialog(frame, "Combatant updated successfully");
+            }else{
+                JOptionPane.showMessageDialog(frame, "Combatant updated, but failed to update stat block.");
+            }
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Please enter valid numbers for Max HP and Armor Class."
+                    "Please enter valid numbers for all stat fields."
+            );
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    frame,
+                    "A database error occurred: " + ex.getMessage()
             );
         }
+    }
+
+    private static PF2eStatBlock getNewStats(JTextField[] statFields) {
+        int level = Integer.parseInt(statFields[0].getText().trim());
+        int perception = Integer.parseInt(statFields[1].getText().trim());
+        int fortitude = Integer.parseInt(statFields[2].getText().trim());
+        int reflex = Integer.parseInt(statFields[3].getText().trim());
+        int will = Integer.parseInt(statFields[4].getText().trim());
+        int speed = Integer.parseInt(statFields[5].getText().trim());
+        PF2eStatBlock newStats = new PF2eStatBlock(
+                level, perception, fortitude, reflex, will, speed);
+        newStats.setLevel(level);
+        newStats.setPerception(perception);
+        newStats.setFortitude(fortitude);
+        newStats.setReflex(reflex);
+        newStats.setWill(will);
+        newStats.setSpeed(speed);
+        return newStats;
     }
 
     //The functionality of the add button in the action pane
