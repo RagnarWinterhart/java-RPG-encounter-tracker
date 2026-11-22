@@ -10,6 +10,13 @@ public class CombatantLibraryGUI {
     private final JFrame frame;
     private List<Combatant> currentResults;
     private final JTable combatantTable;
+    private JLabel levelLabel;
+    private JLabel perceptionLabel;
+    private JLabel fortitudeLabel;
+    private JLabel reflexLabel;
+    private JLabel willLabel;
+    private JLabel speedLabel;
+    private JPanel statsPanel;
 
     //JTable
     //Search Controls --> search bar and drop down for criteria (name/category/creature_type)
@@ -38,10 +45,75 @@ public class CombatantLibraryGUI {
             };
             model.addRow(row);
         }
+        combatantTable.getSelectionModel().addListSelectionListener(event -> {
+            if(!event.getValueIsAdjusting()){
+                boolean selected = combatantTable.getSelectedRow() != -1;
+                statsPanel.setVisible(selected);
+                if (selected){
+                    displaySelectedStats();
+                }
+                statsPanel.getParent().revalidate();
+                statsPanel.getParent().repaint();
+            }
+        });
+
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 0));
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(createStatsPanel(), BorderLayout.EAST);
+        statsPanel.setVisible(false);
         frame.add(createSearchPanel(), BorderLayout.NORTH);
         frame.add(createActionPanel(), BorderLayout.SOUTH);
-        frame.add(scrollPane);
+        frame.add(centerPanel, BorderLayout.CENTER);
         frame.setVisible(true);
+    }
+
+    public void displaySelectedStats() {
+        int selectedRow = combatantTable.getSelectedRow();
+
+        if (selectedRow == -1) {
+            return;
+        }
+        int modelRow = combatantTable.convertRowIndexToModel(selectedRow);
+        Combatant selectedCombatant = currentResults.get(modelRow);
+        PF2eStatBlock stats = DatabaseManager.getPF2eStats(selectedCombatant.getDatabaseId());
+        if(stats == null){
+            levelLabel.setText("Level: N/A");
+            perceptionLabel.setText("Perception: N/A");
+            fortitudeLabel.setText("Fortitude: N/A");
+            reflexLabel.setText("Reflex: N/A");
+            willLabel.setText("Will: N/A");
+            speedLabel.setText("Speed: N/A");
+        }else{
+            levelLabel.setText("Level: " + stats.getLevel());
+            perceptionLabel.setText("Perception: " + stats.getPerception());
+            fortitudeLabel.setText("Fortitude: +" + stats.getFortitude());
+            reflexLabel.setText("Reflex: +" + stats.getReflex());
+            willLabel.setText("Will: +" + stats.getWill());
+            speedLabel.setText("Speed: " + stats.getSpeed());
+        }
+    }
+
+    public JPanel createStatsPanel(){
+        statsPanel = new JPanel();
+        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        statsPanel.setPreferredSize(new Dimension(190, 300));
+        statsPanel.setBorder(BorderFactory.createTitledBorder("PF2e Statistics"));
+
+        levelLabel = new JLabel("Level: ");
+        perceptionLabel = new JLabel("Perception: ");
+        fortitudeLabel = new JLabel("Fortitude: ");
+        reflexLabel = new JLabel("Reflex: ");
+        willLabel = new JLabel("Will: ");
+        speedLabel = new JLabel("Speed: ");
+
+        statsPanel.add(levelLabel);
+        statsPanel.add(perceptionLabel);
+        statsPanel.add(fortitudeLabel);
+        statsPanel.add(reflexLabel);
+        statsPanel.add(willLabel);
+        statsPanel.add(speedLabel);
+
+        return statsPanel;
     }
 
     public JPanel createSearchPanel(){
