@@ -43,16 +43,26 @@ public class DatabaseManager {
         }
     }
 
-    public static void insertCombatant(Combatant combatant){
+    public static boolean insertCombatant(Combatant combatant){
         String sql = "INSERT INTO combatants(name, max_hp, armor_class, category_id) " +
                 "VALUES (?, ?, ?, ?);";
         try(Connection conn = DatabaseManager.connect();
-        PreparedStatement insertStmt = conn.prepareStatement(sql)){
+            PreparedStatement insertStmt = conn.prepareStatement(
+                    sql, Statement.RETURN_GENERATED_KEYS
+            )){
             insertStmt.setString(1, combatant.getName());
             insertStmt.setInt(2, combatant.getMaxHP());
             insertStmt.setInt(3, combatant.getArmorClass());
             insertStmt.setInt(4, getCategoryId(combatant.getCategory()));
-            insertStmt.executeUpdate();
+            int rowsAffected = insertStmt.executeUpdate();
+            ResultSet keys = insertStmt.getGeneratedKeys();
+
+            if (keys.next()) {
+                int generatedId = keys.getInt(1);
+                combatant.setDatabaseId(generatedId);
+                return rowsAffected == 1;
+            }
+            return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -192,5 +202,47 @@ public class DatabaseManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void insertStats(Combatant combatant, PF2eStatBlock stat){
+        String sql = "INSERT INTO pf2e_stat_block(combatant_id, level, " +
+                "perception, fortitude, reflex, will, speed) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?);";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement insertStmt = conn.prepareStatement(sql)){
+            insertStmt.setInt(1, combatant.getDatabaseId());
+            insertStmt.setInt(2, stat.getLevel());
+            insertStmt.setInt(3, stat.getPerception());
+            insertStmt.setInt(4, stat.getFortitude());
+            insertStmt.setInt(5, stat.getReflex());
+            insertStmt.setInt(6, stat.getWill());
+            insertStmt.setInt(7, stat.getSpeed());
+            insertStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static PF2eStatBlock getPF2eStats(int combatantId) {
+        String sql = "SELECT * FROM pf2e_stat_block WHERE combatant_id = ? ";
+        try(Connection conn = DatabaseManager.connect();
+            PreparedStatement selectStmt = conn.prepareStatement(sql)){
+            selectStmt.setInt(1, combatantId);
+            ResultSet results = selectStmt.executeQuery();
+            if(results.next()){
+                int level = results.getInt("level");
+                int perception = results.getInt("perception");
+                int fortitude = results.getInt("fortitude");
+                int reflex = results.getInt("reflex");
+                int will = results.getInt("will");
+                int speed = results.getInt("speed");
+                return new PF2eStatBlock(level, perception, fortitude, reflex, will, speed);
+            }else{
+                return null;
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

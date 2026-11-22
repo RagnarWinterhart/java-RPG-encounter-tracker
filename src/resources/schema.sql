@@ -19,13 +19,13 @@ CREATE TABLE IF NOT EXISTS creature_type(
 );
 
 CREATE TABLE IF NOT EXISTS combatant_creature_type(
-    combatant_id INTEGER NOT NULL REFERENCES combatants(id),
+    combatant_id INTEGER NOT NULL REFERENCES combatants(id) ON DELETE CASCADE,
     type_id INTEGER NOT NULL REFERENCES creature_type(id),
     PRIMARY KEY (combatant_id, type_id)
 );
 
 CREATE TABLE IF NOT EXISTS pf2e_stat_block(
-    combatant_id INTEGER PRIMARY KEY REFERENCES combatants(id),
+    combatant_id INTEGER PRIMARY KEY REFERENCES combatants(id) ON DELETE CASCADE,
     level INTEGER,
     perception INTEGER,
     fortitude INTEGER,

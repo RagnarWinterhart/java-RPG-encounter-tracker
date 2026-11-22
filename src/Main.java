@@ -1,8 +1,9 @@
-import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import javax.swing.*;
+
 /**
- * Launches Encounter Builder app 
+ * Launches Encounter Builder app
  */
 public class Main {
     /**
@@ -10,26 +11,26 @@ public class Main {
      */
     void main() {
         FlatDarkLaf.setup();
-
+        DatabaseManager.initializeDatabase();
         SwingUtilities.invokeLater(() -> {
             new EncounterGUI();
         });
     }
-}  
-        
+}
+
         /*
             Create the Encounter.... (OLD HARD CODED TEST ENCOUNTER)
             OUTSIDE OF CLASS AND METHOD DO NOT UNCOMMENT
         */
         // Scanner input = new Scanner(System.in);
-        
+
         // boolean running = true;
 
         /*
             Menu Choices... First display encounter then print menu choices (OLD TERMINAL BASED VERSION)
          */
 //         while(running){
-//             IO.println(e.toDisplay()); 
+//             IO.println(e.toDisplay());
 //             IO.println("\n=== MENU ===");
 //             IO.println("1. Next Turn");
 //             IO.println("2. Damage");
@@ -38,7 +39,7 @@ public class Main {
 //             IO.println("5. Add condition");
 //             IO.println("6. Remove condition");
 //             IO.println("7. Exit");
-            
+
 //             IO.print(Color.CYAN + "\nChoice: " + Color.RESET);
 //             int choice = input.nextInt();
 //             input.nextLine();
@@ -54,7 +55,7 @@ public class Main {
 //                     IO.println(Color.RED + "\nTarget Name: ");
 //                     String damageTarget = input.nextLine();
 //                     Combatant damaged = e.findCombatant(damageTarget);
-//                     if(damaged == null){//Force another choice if an invalid comabtant name is inputed 
+//                     if(damaged == null){//Force another choice if an invalid comabtant name is inputed
 //                         while(damaged == null){
 //                             IO.println("Combatant not found.");;
 //                             IO.println(Color.RED + "\nPick Another Target Name: ");
@@ -67,13 +68,13 @@ public class Main {
 //                     input.nextLine();
 //                     damaged.takeDamage(damageAmt);
 //                     IO.println(damaged.getName() + " took " + damageAmt + " damage, they now have " + damaged.getCurHP() + " HP." + Color.RESET);
-                     
+
 //                     break;
 //                 case 3: //Heal
 //                     IO.println(Color.GREEN + "\nHeal Target Name: ");
 //                     String healTarget = input.nextLine();
 //                     Combatant healed = e.findCombatant(healTarget);
-//                     if(healed == null){//Force another choice if an invalid comabtant name is inputed 
+//                     if(healed == null){//Force another choice if an invalid comabtant name is inputed
 //                         while(healed == null){
 //                             IO.println("Combatant not found.");;
 //                             IO.println("\nPick Another Target Name: ");
@@ -86,14 +87,14 @@ public class Main {
 //                     input.nextLine();
 //                     healed.heal(healAmt);
 //                     IO.println(healed.getName() + " recieved " + healAmt + " healing, they now have " + healed.getCurHP() + " HP." + Color.RESET);
-                    
+
 //                     break;
 
-//                 case 4: 
+//                 case 4:
 //                     IO.println("Remove who?");
 //                     String removeName = input.nextLine();
 //                     Combatant removed = e.findCombatant(removeName);
-//                     if(removed == null){//Force another choice if an invalid comabtant name is inputed 
+//                     if(removed == null){//Force another choice if an invalid comabtant name is inputed
 //                         while(removed == null){
 //                             IO.println("Combatant not found.");;
 //                             IO.println("\nPick Another Remove Target: ");
@@ -123,10 +124,10 @@ public class Main {
 //                     input.nextLine();
 //                     target.addConditions(new Condition(conditionName, duration));
 //                     IO.println(conditionName + " added to " + targetName + Color.RESET);
-                    
+
 //                     break;
-                
-//                 case 6: 
+
+//                 case 6:
 //                     IO.println(Color.YELLOW + "Remove condition from who?");
 //                     targetName = input.nextLine();
 //                     target = e.findCombatant(targetName);
@@ -143,10 +144,10 @@ public class Main {
 
 //                     target.removeConditions(conditionName);
 //                     IO.println(conditionName + " removed from " + targetName + Color.RESET);
-                    
+
 //                     break;
 
-//                 case 7: 
+//                 case 7:
 //                     running = false;
 //                     IO.println(Color.BG_RED + "Encounter Ended." + Color.RESET);
 //                     break;
