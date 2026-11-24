@@ -179,8 +179,8 @@ public class EncounterGUI {
         removeCondition = new JButton("Remove Condition");
         removeCondition.addActionListener(e -> remCondition());
 
-        moveInit = new JButton("Move Initiative");
-        moveInit.addActionListener(e -> moveInit());
+        moveInit = new JButton("Set Initiative");
+        moveInit.addActionListener(e -> setInit());
 
         newEnc = new JButton("New Encounter");
         newEnc.addActionListener(e -> newEnc());
@@ -258,7 +258,7 @@ public class EncounterGUI {
     /**
      * Changes selected target's initiative, moving them accordingly. Returns, cancelling the operation if null is inputted for any field.
      */
-    private void moveInit(){
+    private void setInit(){
         String selected = selectTarget();
         Combatant target = encounter.findCombatant(selected);
         if(target == null){return;}
@@ -476,8 +476,34 @@ public class EncounterGUI {
         return DialogUtils.dropdown(frame, "Select Target", choices);
     }
 
-    public void addExistingCombatant(Combatant combatant){
-        encounter.addCombatant(combatant);
+    public void addExistingCombatant(Combatant combatant) {
+        String baseName = combatant.getName();
+        String encounterName = baseName;
+        int copyNumber = 2;
+
+        // Find an unused name: Goblin, Goblin 2, Goblin 3, ...
+        while (encounter.findCombatant(encounterName) != null) {
+            encounterName = baseName + " " + copyNumber;
+            copyNumber++;
+        }
+
+        // Make a separate encounter instance, leaving the library object unchanged.
+        Combatant encounterCombatant = new Combatant(
+                encounterName,
+                combatant.getInit(),
+                combatant.getMaxHP(),
+                combatant.getCurHP(),
+                combatant.getArmorClass(),
+                combatant.getCategory()
+        );
+
+        // Keep the database ID so linked PF2e stats can still be retrieved.
+        encounterCombatant.setDatabaseId(combatant.getDatabaseId());
+
+        // Give this instance its own conditions list.
+        encounterCombatant.getConditions().addAll(combatant.getConditions());
+
+        encounter.addCombatant(encounterCombatant);
         encounter.sortInitiative();
         refreshDisplay();
     }
