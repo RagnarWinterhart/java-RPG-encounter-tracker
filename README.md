@@ -1,144 +1,118 @@
-# Encounter Builder
+# RPG Encounter Tracker
 
-A Java Swing application for managing tabletop RPG combat encounters. Allows for creation of custom encounters with editable, statistics for Name, HP, dynamic Initiative score, Type, and conditions. Features like add/remove for individual combatants, as well as save and load features to prebuild encounters. 
+A Java Swing application for building and managing tabletop RPG combat encounters. Track initiative, turns, rounds, hit points, armor class, and conditions, or manage reusable combatants in a local SQLite library.
 
 ## Features
 
-- Turn and round tracking
-- Initiative sorting
-- Add/remove combatants
-- Damage and healing system
-- Condition tracking
-- Save/load encounters from files
-- Scrollable combatant interface
-- Current turn highlighting
-## Saving and Loading
+### Encounter Management
+- Create and manage combat encounters
+- Track initiative order, turns, and rounds
+- Add and remove combatants
+- Track hit points, armor class, and conditions
+- Apply damage and healing
+- Highlight the combatant whose turn is active
+- Save and load encounters
 
-Encounters can be saved to and loaded from `.enc` files using the GUI buttons.
+### Combatant Library
+- Store reusable combatants in a local SQLite database
+- Create, edit, and delete library entries
+- Search combatants by name, category, and creature type
+- Organize combatants by category, such as Monster, NPC, and Player
+- Store optional Pathfinder 2e stat blocks
+- Add library combatants to an encounter
 
-## Technologies Used
+## Screenshots
+
+<!-- Replace the image paths below with screenshots saved in the images/ folder. -->
+
+### Encounter Tracker
+
+![Encounter tracker example](images/encounter-tracker.png)
+
+### Combatant Library
+
+![Combatant library example](images/combatant-library.png)
+
+### Combatant Editor
+
+![Combatant editor example](images/combatant-editor.png)
+
+## Requirements
+
+- Git
+- A JDK compatible with the Java release configured in `pom.xml`
+- Maven (optional; the repository includes Maven Wrapper scripts)
+
+> The current `pom.xml` sets `maven.compiler.release` to `27`. If your installed JDK does not support that release, change this property to a release supported by your JDK before building.
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/RagnarWinterhart/java-RPG-encounter-tracker.git
+cd java-RPG-encounter-tracker
+```
+
+Alternatively, download the repository as a ZIP file and extract it.
+
+### 2. Open the project
+
+Open the project folder in an IDE with Maven support, such as IntelliJ IDEA. Allow the IDE to import the Maven project and resolve its dependencies.
+
+The project uses Maven to manage dependencies, including SQLite JDBC and FlatLaf.
+
+### 3. Build the project
+
+On Windows, run:
+
+```powershell
+.\mvnw.cmd clean package
+```
+
+On macOS or Linux, run:
+
+```bash
+./mvnw clean package
+```
+
+If you have Maven installed separately, you can use `mvn clean package` instead.
+
+### 4. Run the application
+
+Run the `Main` class from your IDE.
+
+The application uses a local SQLite database for the combatant library. The database file is named `encounter_tracker.db`; keep it in a safe location if you want to preserve your library data.
+
+## Saving Encounters
+
+Use the encounter save and load controls in the application to save an encounter to a file and load it again later.
+
+## Technologies
 
 - Java
 - Java Swing
-- Object-Oriented Programming
-- ArrayLists
-- Custom Encounter ADT to managing intiative, combatants, and round progression
-- Lambda expressions
-- File serialization
-- JUnit testing
-- FlatLaf Java Swing Look and feel
+- Maven
+- SQLite and SQLite JDBC
+- FlatLaf
+- JUnit
 
-## How to Run/Install (MacOS)
-You must first have a JDK installed with JPackage.
+## Project Structure
 
-```bash
-javac -cp "lib/flatlaf-3.7.2.jar" -d out src/*.java 
-```
-```bash
-jar --create \
-    --file EncounterBuilder.jar \
-    --main-class Main \
-    -C out .
-```
-```bash
-jpackage \
-  --input . \
-  --dest dist \
-  --name EncounterBuilder \
-  --main-jar EncounterBuilder.jar \
-  --main-class Main \
-  --type dmg
-```
-
-## How to Run/Install (Windows)
-You must first have a JDK installed with JPackage.
-
-```bash
-javac -cp "lib/*" -d out src/*.java 
-```
-```bash
-jar --create ^
-    --file EncounterBuilder.jar ^
-    --main-class Main ^
-    -C out .
-```
-```bash
-jpackage ^
-    --input dist ^
-    --dest dist ^
-    --name EncounterBuilder ^
-    --main-jar EncounterBuilder.jar ^
-    --main-class Main ^
-    --type exe
-```
-
-## Testing
-
-JUnit tests are included in `EncounterTest.java`.
-
-Run tests with:
-
-```bash
-javac -g -cp "out:lib/junit.jar" -d out test/*.java
-
-java -jar lib/junit.jar execute --class-path out --scan-class-path
+```text
+.
+├── src/             # Application source code and resources
+├── test/            # Tests
+├── documentation/  # Project documentation
+├── images/          # README screenshots and project images
+├── pom.xml          # Maven project configuration
+├── mvnw             # Maven Wrapper (macOS/Linux)
+└── mvnw.cmd         # Maven Wrapper (Windows)
 ```
 
 ## Documentation
 
-Javadocs can be generated with:
-
-```bash
-javadoc -d docs src/*.java
-```
-
-To generate UML Class Diagram (MacOS):
-
-
-```
-brew install graphviz plantuml
-
-(Navigate to /documentation within the repo)
-plantuml Encounter.puml
-```
-
-## Screenshots
-Sample loaded encounter with applied condition.
-![Encounter Builder Screenshot](images/Demo.png)
-
-## Challenges
-- Handling dynamic Swing layouts and scrolling to keep elements in frame
-- Handling invalid input into GUI to prevent crashing
-- Current turn tracking not wrapping 
-- Removing from the index based turn tracker causing indices to change depending on what was removed
-
-## Future Improvements
-- Unique Icon to replace default swing icons
-- Initiative drag-and-drop
-- Monster templates
-    - Backend database for saved combatants (JSON?)
-- Better tile layouts
-- Encounter export formats
-- Combat log/history
-- Undo system
-- Search function
-
-
-### Undo System
-Potential stack-based history system for:
-- HP changes
-- removed combatants
-- combat actions
-
-### Save/Load Enhancements
-- Multiple save files
-- Save naming system
-- Auto-save functionality
-
-### Potential backend database
-- Store parties and members 
-- Creature database (For creation then saving and drag and drop use later)
-
+Project documentation and diagrams are available in the `documentation/` directory.
 
 ## Author
 
